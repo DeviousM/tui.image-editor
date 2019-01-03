@@ -2,12 +2,12 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Image flip module
  */
-import snippet from 'tui-code-snippet';
-import Promise from 'core-js/library/es6/promise';
-import Component from '../interface/component';
-import consts from '../consts';
+import snippet from "../tui-code-snippet";
+import Promise from "core-js/library/es6/promise";
+import Component from "../interface/component";
+import consts from "../consts";
 
-const {componentNames, rejectMessages} = consts;
+const { componentNames, rejectMessages } = consts;
 
 /**
  * Flip
@@ -41,8 +41,8 @@ class Flip extends Component {
      */
     set(newSetting) {
         const setting = this.getCurrentSetting();
-        const isChangingFlipX = (setting.flipX !== newSetting.flipX);
-        const isChangingFlipY = (setting.flipY !== newSetting.flipY);
+        const isChangingFlipX = setting.flipX !== newSetting.flipX;
+        const isChangingFlipY = setting.flipY !== newSetting.flipY;
 
         if (!isChangingFlipX && !isChangingFlipY) {
             return Promise.reject(rejectMessages.flip);
@@ -67,7 +67,7 @@ class Flip extends Component {
      */
     _invertAngle(isChangingFlipX, isChangingFlipY) {
         const canvasImage = this.getCanvasImage();
-        let {angle} = canvasImage;
+        let { angle } = canvasImage;
 
         if (isChangingFlipX) {
             angle *= -1;
@@ -75,7 +75,7 @@ class Flip extends Component {
         if (isChangingFlipY) {
             angle *= -1;
         }
-        canvasImage.setAngle(parseFloat(angle)).setCoords();// parseFloat for -0 to 0
+        canvasImage.setAngle(parseFloat(angle)).setCoords(); // parseFloat for -0 to 0
     }
 
     /**
@@ -146,4 +146,4 @@ class Flip extends Component {
     }
 }
 
-module.exports = Flip;
+export default Flip;

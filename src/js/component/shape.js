@@ -2,21 +2,21 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Shape component
  */
-import fabric from 'fabric/dist/fabric.require';
-import Promise from 'core-js/library/es6/promise';
-import Component from '../interface/component';
-import consts from '../consts';
-import resizeHelper from '../helper/shapeResizeHelper';
-import {extend, inArray} from 'tui-code-snippet';
+import fabric from "../../libs/fabric.require";
+import Promise from "core-js/library/es6/promise";
+import Component from "../interface/component";
+import consts from "../consts";
+import resizeHelper from "../helper/shapeResizeHelper";
+import { extend, inArray } from "../tui-code-snippet";
 
-const {rejectMessages, eventNames} = consts;
+const { rejectMessages, eventNames } = consts;
 const KEY_CODES = consts.keyCodes;
 
-const DEFAULT_TYPE = 'rect';
+const DEFAULT_TYPE = "rect";
 const DEFAULT_OPTIONS = {
     strokeWidth: 1,
-    stroke: '#000000',
-    fill: '#ffffff',
+    stroke: "#000000",
+    fill: "#ffffff",
     width: 1,
     height: 1,
     rx: 0,
@@ -28,7 +28,7 @@ const DEFAULT_OPTIONS = {
     isRegular: false
 };
 
-const shapeType = ['rect', 'circle', 'triangle'];
+const shapeType = ["rect", "circle", "triangle"];
 
 /**
  * Shape
@@ -106,15 +106,15 @@ class Shape extends Component {
 
         this._isSelected = false;
 
-        canvas.defaultCursor = 'crosshair';
+        canvas.defaultCursor = "crosshair";
         canvas.selection = false;
         canvas.uniScaleTransform = true;
         canvas.on({
-            'mouse:down': this._handlers.mousedown
+            "mouse:down": this._handlers.mousedown
         });
 
-        fabric.util.addListener(document, 'keydown', this._handlers.keydown);
-        fabric.util.addListener(document, 'keyup', this._handlers.keyup);
+        fabric.util.addListener(document, "keydown", this._handlers.keydown);
+        fabric.util.addListener(document, "keyup", this._handlers.keyup);
     }
 
     /**
@@ -126,16 +126,16 @@ class Shape extends Component {
 
         this._isSelected = false;
 
-        canvas.defaultCursor = 'default';
+        canvas.defaultCursor = "default";
 
         canvas.selection = true;
         canvas.uniScaleTransform = false;
         canvas.off({
-            'mouse:down': this._handlers.mousedown
+            "mouse:down": this._handlers.mousedown
         });
 
-        fabric.util.removeListener(document, 'keydown', this._handlers.keydown);
-        fabric.util.removeListener(document, 'keyup', this._handlers.keyup);
+        fabric.util.removeListener(document, "keydown", this._handlers.keydown);
+        fabric.util.removeListener(document, "keyup", this._handlers.keyup);
     }
 
     /**
@@ -204,7 +204,7 @@ class Shape extends Component {
      */
     change(shapeObj, options) {
         return new Promise((resolve, reject) => {
-            if (inArray(shapeObj.get('type'), shapeType) < 0) {
+            if (inArray(shapeObj.get("type"), shapeType) < 0) {
                 reject(rejectMessages.unsupportedType);
             }
 
@@ -225,15 +225,20 @@ class Shape extends Component {
         let instance;
 
         switch (type) {
-            case 'rect':
+            case "rect":
                 instance = new fabric.Rect(options);
                 break;
-            case 'circle':
-                instance = new fabric.Ellipse(extend({
-                    type: 'circle'
-                }, options));
+            case "circle":
+                instance = new fabric.Ellipse(
+                    extend(
+                        {
+                            type: "circle"
+                        },
+                        options
+                    )
+                );
                 break;
-            case 'triangle':
+            case "triangle":
                 instance = new fabric.Triangle(options);
                 break;
             default:
@@ -252,7 +257,13 @@ class Shape extends Component {
     _createOptions(options) {
         const selectionStyles = consts.fObjectOptions.SELECTION_STYLE;
 
-        options = extend({}, DEFAULT_OPTIONS, this._options, selectionStyles, options);
+        options = extend(
+            {},
+            DEFAULT_OPTIONS,
+            this._options,
+            selectionStyles,
+            options
+        );
 
         if (options.isRegular) {
             options.lockUniScaling = true;
@@ -279,13 +290,13 @@ class Shape extends Component {
                 self._isSelected = true;
                 self._shapeObj = this;
                 canvas.uniScaleTransform = true;
-                canvas.defaultCursor = 'default';
+                canvas.defaultCursor = "default";
                 resizeHelper.setOrigins(self._shapeObj);
             },
             deselected() {
                 self._isSelected = false;
                 self._shapeObj = null;
-                canvas.defaultCursor = 'crosshair';
+                canvas.defaultCursor = "crosshair";
                 canvas.uniScaleTransform = false;
             },
             modified() {
@@ -298,7 +309,7 @@ class Shape extends Component {
                 const pointer = canvas.getPointer(fEvent.e);
                 const currentObj = self._shapeObj;
 
-                canvas.setCursor('crosshair');
+                canvas.setCursor("crosshair");
                 resizeHelper.resize(currentObj, pointer, true);
             }
         });
@@ -320,8 +331,8 @@ class Shape extends Component {
             this._startPoint = canvas.getPointer(fEvent.e);
 
             canvas.on({
-                'mouse:move': this._handlers.mousemove,
-                'mouse:up': this._handlers.mouseup
+                "mouse:move": this._handlers.mousemove,
+                "mouse:up": this._handlers.mouseup
             });
         }
     }
@@ -370,11 +381,14 @@ class Shape extends Component {
             resizeHelper.adjustOriginToCenter(shape);
         }
 
-        this.fire(eventNames.ADD_OBJECT_AFTER, this.graphics.createObjectProperties(shape));
+        this.fire(
+            eventNames.ADD_OBJECT_AFTER,
+            this.graphics.createObjectProperties(shape)
+        );
 
         canvas.off({
-            'mouse:move': this._handlers.mousemove,
-            'mouse:up': this._handlers.mouseup
+            "mouse:move": this._handlers.mousemove,
+            "mouse:up": this._handlers.mouseup
         });
     }
 
@@ -409,4 +423,4 @@ class Shape extends Component {
     }
 }
 
-module.exports = Shape;
+export default Shape;

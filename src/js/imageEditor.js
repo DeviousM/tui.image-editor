@@ -2,37 +2,24 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Image-editor application class
  */
-import snippet from 'tui-code-snippet';
-import Promise from 'core-js/library/es6/promise';
-import Invoker from './invoker';
-import UI from './ui';
-import action from './action';
-import commandFactory from './factory/command';
-import Graphics from './graphics';
-import consts from './consts';
-import {sendHostName} from './util';
+import snippet from "./tui-code-snippet";
+import Promise from "core-js/library/es6/promise";
+import Invoker from "./invoker";
+import action from "./action";
+import commandFactory from "./factory/command";
+import Graphics from "./graphics";
+import consts from "./consts";
 
 const events = consts.eventNames;
 const commands = consts.commandNames;
-const {keyCodes, rejectMessages} = consts;
-const {isUndefined, forEach, CustomEvents} = snippet;
+const { keyCodes, rejectMessages } = consts;
+const { isUndefined, forEach, CustomEvents } = snippet;
 
 /**
  * Image editor
  * @class
  * @param {string|jQuery|HTMLElement} wrapper - Wrapper's element or selector
  * @param {Object} [options] - Canvas max width & height of css
- *  @param {number} [options.includeUI] - Use the provided UI
- *    @param {Object} [options.includeUI.loadImage] - Basic editing image
- *      @param {string} options.includeUI.loadImage.path - image path
- *      @param {string} options.includeUI.loadImage.name - image name
- *    @param {Object} [options.includeUI.theme] - Theme object
- *    @param {Array} [options.includeUI.menu] - It can be selected when only specific menu is used. [default all]
- *    @param {string} [options.includeUI.initMenu] - The first menu to be selected and started.
- *    @param {Object} [options.includeUI.uiSize] - ui size of editor
- *      @param {string} options.includeUI.uiSize.width - width of ui
- *      @param {string} options.includeUI.uiSize.height - height of ui
- *    @param {string} [options.includeUI.menuBarPosition=bottom] - Menu bar position [top | bottom | left | right]
  *  @param {number} options.cssMaxWidth - Canvas css-max-width
  *  @param {number} options.cssMaxHeight - Canvas css-max-height
  *  @param {Boolean} [options.usageStatistics=true] - Let us know the hostname. If you don't want to send the hostname, please set to false.
@@ -64,23 +51,22 @@ const {isUndefined, forEach, CustomEvents} = snippet;
  */
 class ImageEditor {
     constructor(wrapper, options) {
-        options = snippet.extend({
-            includeUI: false,
-            usageStatistics: true
-        }, options);
+        this.wrapperDOMNode = wrapper;
+
+        this.wrapperDOMNode.setAttribute("tabindex", 0);
+        this.wrapperDOMNode.style.outline = "none";
+
+        options = snippet.extend(
+            {
+                includeUI: false,
+                usageStatistics: true
+            },
+            options
+        );
 
         this.mode = null;
 
         this.activeObjectId = null;
-
-        /**
-         * UI instance
-         * @type {Ui}
-         */
-        if (options.includeUI) {
-            this.ui = new UI(wrapper, options.includeUI, this.getActions());
-            options = this.ui.setUiDefaultSelectionStyle(options);
-        }
 
         /**
          * Invoker
@@ -95,10 +81,11 @@ class ImageEditor {
          * @private
          */
         this._graphics = new Graphics(
-            this.ui ? this.ui.getEditorArea() : wrapper, {
+            this.ui ? this.ui.getEditorArea() : wrapper,
+            {
                 cssMaxWidth: options.cssMaxWidth,
                 cssMaxHeight: options.cssMaxHeight,
-                useItext: !!this.ui,
+                useItext: true,
                 useDragAddIcon: !!this.ui
             }
         );
@@ -133,10 +120,6 @@ class ImageEditor {
             applyCropSelectionStyle: options.applyCropSelectionStyle,
             applyGroupSelectionStyle: options.applyGroupSelectionStyle
         });
-
-        if (options.usageStatistics) {
-            sendHostName();
-        }
 
         if (this.ui) {
             this.ui.initCanvas();
@@ -205,7 +188,10 @@ class ImageEditor {
      *   @param {boolean} applyGroupSelectionStyle - whether apply with group selection style or not
      * @private
      */
-    _setSelectionStyle(selectionStyle, {applyCropSelectionStyle, applyGroupSelectionStyle}) {
+    _setSelectionStyle(
+        selectionStyle,
+        { applyCropSelectionStyle, applyGroupSelectionStyle }
+    ) {
         if (selectionStyle) {
             this._graphics.setSelectionStyle(selectionStyle);
         }
@@ -215,8 +201,8 @@ class ImageEditor {
         }
 
         if (applyGroupSelectionStyle) {
-            this.on('selectionCreated', eventTarget => {
-                if (eventTarget.type === 'group') {
+            this.on("selectionCreated", eventTarget => {
+                if (eventTarget.type === "group") {
                     eventTarget.set(selectionStyle);
                 }
             });
@@ -228,10 +214,7 @@ class ImageEditor {
      * @private
      */
     _attachInvokerEvents() {
-        const {
-            UNDO_STACK_CHANGED,
-            REDO_STACK_CHANGED
-        } = events;
+        const { UNDO_STACK_CHANGED, REDO_STACK_CHANGED } = events;
 
         /**
          * Undo stack changed event
@@ -242,7 +225,10 @@ class ImageEditor {
          *     console.log(length);
          * });
          */
-        this._invoker.on(UNDO_STACK_CHANGED, this.fire.bind(this, UNDO_STACK_CHANGED));
+        this._invoker.on(
+            UNDO_STACK_CHANGED,
+            this.fire.bind(this, UNDO_STACK_CHANGED)
+        );
         /**
          * Redo stack changed event
          * @event ImageEditor#redoStackChanged
@@ -252,7 +238,10 @@ class ImageEditor {
          *     console.log(length);
          * });
          */
-        this._invoker.on(REDO_STACK_CHANGED, this.fire.bind(this, REDO_STACK_CHANGED));
+        this._invoker.on(
+            REDO_STACK_CHANGED,
+            this.fire.bind(this, REDO_STACK_CHANGED)
+        );
     }
 
     /**
@@ -261,19 +250,19 @@ class ImageEditor {
      */
     _attachGraphicsEvents() {
         this._graphics.on({
-            'mousedown': this._handlers.mousedown,
-            'objectMoved': this._handlers.objectMoved,
-            'objectScaled': this._handlers.objectScaled,
-            'objectActivated': this._handlers.objectActivated,
-            'addText': this._handlers.addText,
-            'addObject': this._handlers.addObject,
-            'textEditing': this._handlers.textEditing,
-            'textChanged': this._handlers.textChanged,
-            'iconCreateResize': this._handlers.iconCreateResize,
-            'iconCreateEnd': this._handlers.iconCreateEnd,
-            'selectionCleared': this._handlers.selectionCleared,
-            'selectionCreated': this._handlers.selectionCreated,
-            'addObjectAfter': this._handlers.addObjectAfter
+            mousedown: this._handlers.mousedown,
+            objectMoved: this._handlers.objectMoved,
+            objectScaled: this._handlers.objectScaled,
+            objectActivated: this._handlers.objectActivated,
+            addText: this._handlers.addText,
+            addObject: this._handlers.addObject,
+            textEditing: this._handlers.textEditing,
+            textChanged: this._handlers.textChanged,
+            iconCreateResize: this._handlers.iconCreateResize,
+            iconCreateEnd: this._handlers.iconCreateEnd,
+            selectionCleared: this._handlers.selectionCleared,
+            selectionCreated: this._handlers.selectionCreated,
+            addObjectAfter: this._handlers.addObjectAfter
         });
     }
 
@@ -283,7 +272,7 @@ class ImageEditor {
      */
     _attachDomEvents() {
         // ImageEditor supports IE 9 higher
-        document.addEventListener('keydown', this._handlers.keydown);
+        this.wrapperDOMNode.addEventListener("keydown", this._handlers.keydown);
     }
 
     /**
@@ -292,7 +281,10 @@ class ImageEditor {
      */
     _detachDomEvents() {
         // ImageEditor supports IE 9 higher
-        document.removeEventListener('keydown', this._handlers.keydown);
+        this.wrapperDOMNode.removeEventListener(
+            "keydown",
+            this._handlers.keydown
+        );
     }
 
     /**
@@ -308,15 +300,18 @@ class ImageEditor {
 
         if ((e.ctrlKey || e.metaKey) && e.keyCode === keyCodes.Z) {
             // There is no error message on shortcut when it's empty
-            this.undo()['catch'](() => {});
+            this.undo()["catch"](() => {});
         }
 
         if ((e.ctrlKey || e.metaKey) && e.keyCode === keyCodes.Y) {
             // There is no error message on shortcut when it's empty
-            this.redo()['catch'](() => {});
+            this.redo()["catch"](() => {});
         }
 
-        if (((e.keyCode === keyCodes.BACKSPACE || e.keyCode === keyCodes.DEL) && existRemoveObject)) {
+        if (
+            (e.keyCode === keyCodes.BACKSPACE || e.keyCode === keyCodes.DEL) &&
+            existRemoveObject
+        ) {
             e.preventDefault();
             this.removeActiveObject();
         }
@@ -353,9 +348,9 @@ class ImageEditor {
 
         const targetObject = targetObjects.pop();
 
-        return this.removeObject(this._graphics.getObjectId(targetObject)).then(() => (
-            this._removeObjectStream(targetObjects)
-        ));
+        return this.removeObject(this._graphics.getObjectId(targetObject)).then(
+            () => this._removeObjectStream(targetObjects)
+        );
     }
 
     /**
@@ -395,7 +390,11 @@ class ImageEditor {
      * @private
      */
     _pushAddObjectCommand(obj) {
-        const command = commandFactory.create(commands.ADD_OBJECT, this._graphics, obj);
+        const command = commandFactory.create(
+            commands.ADD_OBJECT,
+            this._graphics,
+            obj
+        );
         this._invoker.pushUndoStack(command);
     }
 
@@ -699,7 +698,7 @@ class ImageEditor {
      * });
      */
     flipX() {
-        return this._flip('flipX');
+        return this._flip("flipX");
     }
 
     /**
@@ -715,7 +714,7 @@ class ImageEditor {
      * });
      */
     flipY() {
-        return this._flip('flipY');
+        return this._flip("flipY");
     }
 
     /**
@@ -731,7 +730,7 @@ class ImageEditor {
      * });;
      */
     resetFlip() {
-        return this._flip('reset');
+        return this._flip("reset");
     }
 
     /**
@@ -761,7 +760,7 @@ class ImageEditor {
      * });
      */
     rotate(angle) {
-        return this._rotate('rotate', angle);
+        return this._rotate("rotate", angle);
     }
 
     /**
@@ -781,7 +780,7 @@ class ImageEditor {
      * });
      */
     setAngle(angle) {
-        return this._rotate('setAngle', angle);
+        return this._rotate("setAngle", angle);
     }
 
     /**
@@ -961,7 +960,7 @@ class ImageEditor {
      * });
      */
     addText(text, options) {
-        text = text || '';
+        text = text || "";
         options = options || {};
 
         return this.execute(commands.ADD_TEXT, text, options);
@@ -976,7 +975,7 @@ class ImageEditor {
      * imageEditor.changeText(id, 'change text');
      */
     changeText(id, text) {
-        text = text || '';
+        text = text || "";
 
         return this.execute(commands.CHANGE_TEXT, id, text);
     }
@@ -1008,7 +1007,7 @@ class ImageEditor {
      * @private
      */
     _changeActivateMode(type) {
-        if (type !== 'ICON' && this.getDrawingMode() !== type) {
+        if (type !== "ICON" && this.getDrawingMode() !== type) {
             this.startDrawingMode(type);
         }
     }
@@ -1225,26 +1224,6 @@ class ImageEditor {
     }
 
     /**
-     * Apply filter on canvas image
-     * @param {string} type - Filter type
-     * @param {Object} options - Options to apply filter
-     *  @param {number} options.maskObjId - masking image object id
-     * @returns {Promise<FilterResult, ErrorMsg>}
-     * @example
-     * imageEditor.applyFilter('Grayscale');
-     * @example
-     * imageEditor.applyFilter('mask', {maskObjId: id}).then(obj => {
-     *     console.log('filterType: ', obj.type);
-     *     console.log('actType: ', obj.action);
-     * }).catch(message => {
-     *     console.log('error: ', message);
-     * });;
-     */
-    applyFilter(type, options) {
-        return this.execute(commands.APPLY_FILTER, type, options);
-    }
-
-    /**
      * Get data url
      * @param {Object} options - options for toDataURL
      *   @param {String} [options.format=png] The format of the output image. Either "jpeg" or "png"
@@ -1334,9 +1313,13 @@ class ImageEditor {
         this._graphics.destroy();
         this._graphics = null;
 
-        forEach(this, (value, key) => {
-            this[key] = null;
-        }, this);
+        forEach(
+            this,
+            (value, key) => {
+                this[key] = null;
+            },
+            this
+        );
     }
 
     /**
@@ -1500,4 +1483,4 @@ class ImageEditor {
 action.mixin(ImageEditor);
 CustomEvents.mixin(ImageEditor);
 
-module.exports = ImageEditor;
+export default ImageEditor;

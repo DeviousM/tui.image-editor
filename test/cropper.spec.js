@@ -2,38 +2,38 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Test cases of "src/js/component/cropper.js"
  */
-import snippet from 'tui-code-snippet';
-import fabric from 'fabric/dist/fabric.require';
-import $ from 'jquery';
-import Cropper from '../src/js/component/cropper';
-import Graphics from '../src/js/graphics';
+import snippet from "../src/js/tui-code-snippet";
+import fabric from "fabric/dist/fabric.require";
+import $ from "jquery";
+import Cropper from "../src/js/component/cropper";
+import Graphics from "../src/js/graphics";
 
-describe('Cropper', () => {
+describe("Cropper", () => {
     let cropper, graphics, canvas;
 
     beforeEach(() => {
-        graphics = new Graphics($('<canvas>')[0]);
+        graphics = new Graphics($("<canvas>")[0]);
         canvas = graphics.getCanvas();
         cropper = new Cropper(graphics);
     });
 
-    describe('start()', () => {
-        it('should create a cropzone', () => {
+    describe("start()", () => {
+        it("should create a cropzone", () => {
             cropper.start();
 
             expect(cropper._cropzone).toBeDefined();
         });
 
-        it('should add a cropzone to canvas', () => {
-            spyOn(canvas, 'add');
+        it("should add a cropzone to canvas", () => {
+            spyOn(canvas, "add");
             cropper.start();
 
             expect(canvas.add).toHaveBeenCalledWith(cropper._cropzone);
         });
 
-        it('should no action if a croppzone has been defined', () => {
+        it("should no action if a croppzone has been defined", () => {
             cropper._cropzone = {};
-            spyOn(canvas, 'add');
+            spyOn(canvas, "add");
             cropper.start();
 
             expect(canvas.add).not.toHaveBeenCalled();
@@ -41,9 +41,9 @@ describe('Cropper', () => {
 
         it('should set "evented" of all objects to false', () => {
             const objects = [
-                new fabric.Object({evented: true}),
-                new fabric.Object({evented: true}),
-                new fabric.Object({evented: true})
+                new fabric.Object({ evented: true }),
+                new fabric.Object({ evented: true }),
+                new fabric.Object({ evented: true })
             ];
             canvas.add(objects[0], objects[1], objects[2]);
 
@@ -60,7 +60,7 @@ describe('Cropper', () => {
             fEvent = {
                 e: {}
             };
-            spyOn(canvas, 'getPointer').and.returnValue({
+            spyOn(canvas, "getPointer").and.returnValue({
                 x: 10,
                 y: 20
             });
@@ -81,48 +81,54 @@ describe('Cropper', () => {
 
     describe('"onFabricMouseMove()', () => {
         beforeEach(() => {
-            spyOn(canvas, 'getPointer').and.returnValue({
+            spyOn(canvas, "getPointer").and.returnValue({
                 x: 10,
                 y: 20
             });
-            spyOn(canvas, 'getWidth').and.returnValue(100);
-            spyOn(canvas, 'getHeight').and.returnValue(200);
+            spyOn(canvas, "getWidth").and.returnValue(100);
+            spyOn(canvas, "getHeight").and.returnValue(200);
         });
 
-        it('should re-render(remove->set->add) cropzone ' +
-            'if the mouse moving is over the threshold(=10)', () => {
-            cropper._startX = 0;
-            cropper._startY = 0;
+        it(
+            "should re-render(remove->set->add) cropzone " +
+                "if the mouse moving is over the threshold(=10)",
+            () => {
+                cropper._startX = 0;
+                cropper._startY = 0;
 
-            cropper.start();
-            spyOn(cropper._cropzone, 'remove');
-            spyOn(cropper._cropzone, 'set');
-            spyOn(canvas, 'add');
-            cropper._onFabricMouseMove({e: {}});
+                cropper.start();
+                spyOn(cropper._cropzone, "remove");
+                spyOn(cropper._cropzone, "set");
+                spyOn(canvas, "add");
+                cropper._onFabricMouseMove({ e: {} });
 
-            expect(cropper._cropzone.remove).toHaveBeenCalled();
-            expect(cropper._cropzone.set).toHaveBeenCalled();
-            expect(canvas.add).toHaveBeenCalled();
-        });
+                expect(cropper._cropzone.remove).toHaveBeenCalled();
+                expect(cropper._cropzone.set).toHaveBeenCalled();
+                expect(canvas.add).toHaveBeenCalled();
+            }
+        );
 
-        it('should not re-render cropzone ' +
-            'if the mouse moving is under the threshold', () => {
-            cropper._startX = 14;
-            cropper._startY = 18;
+        it(
+            "should not re-render cropzone " +
+                "if the mouse moving is under the threshold",
+            () => {
+                cropper._startX = 14;
+                cropper._startY = 18;
 
-            cropper.start();
-            spyOn(cropper._cropzone, 'remove');
-            spyOn(cropper._cropzone, 'set');
-            spyOn(canvas, 'add');
-            cropper._onFabricMouseMove({e: {}});
+                cropper.start();
+                spyOn(cropper._cropzone, "remove");
+                spyOn(cropper._cropzone, "set");
+                spyOn(canvas, "add");
+                cropper._onFabricMouseMove({ e: {} });
 
-            expect(cropper._cropzone.remove).not.toHaveBeenCalled();
-            expect(cropper._cropzone.set).not.toHaveBeenCalled();
-            expect(canvas.add).not.toHaveBeenCalled();
-        });
+                expect(cropper._cropzone.remove).not.toHaveBeenCalled();
+                expect(cropper._cropzone.set).not.toHaveBeenCalled();
+                expect(canvas.add).not.toHaveBeenCalled();
+            }
+        );
     });
 
-    describe('_calcRectDimensionFromPoint()', () => {
+    describe("_calcRectDimensionFromPoint()", () => {
         beforeEach(() => {
             cropper._startX = 10;
             cropper._startY = 20;
@@ -136,7 +142,7 @@ describe('Cropper', () => {
             });
         });
 
-        it('should return cropzone-left&top (min: 0, max: startX,Y)', () => {
+        it("should return cropzone-left&top (min: 0, max: startX,Y)", () => {
             const x = 20,
                 y = -1,
                 expected = {
@@ -150,7 +156,7 @@ describe('Cropper', () => {
             expect(actual).toEqual(expected);
         });
 
-        it('should calculate and return cropzone-width&height', () => {
+        it("should calculate and return cropzone-width&height", () => {
             let x, y, expected, actual;
 
             x = 30;
@@ -176,7 +182,7 @@ describe('Cropper', () => {
             expect(actual).toEqual(expected);
         });
 
-        it('should create cropzone that has fixed ratio during shift key is pressed.', () => {
+        it("should create cropzone that has fixed ratio during shift key is pressed.", () => {
             const x = 100;
             const y = 200;
             const expected = {
@@ -193,7 +199,7 @@ describe('Cropper', () => {
             expect(actual).toEqual(expected);
         });
 
-        it('should create cropzone that inverted current mouse position during shift key is pressed.', () => {
+        it("should create cropzone that inverted current mouse position during shift key is pressed.", () => {
             const x = -10;
             const y = -20;
             const expected = {
@@ -220,19 +226,21 @@ describe('Cropper', () => {
     });
 
     describe('"crop()"', () => {
-        it('should return cropzone rect', () => {
+        it("should return cropzone rect", () => {
             cropper.start();
-            spyOn(cropper._cropzone, 'isValid').and.returnValue(true);
+            spyOn(cropper._cropzone, "isValid").and.returnValue(true);
 
             expect(cropper.getCropzoneRect()).toBeTruthy();
             cropper.end();
         });
 
-        it('should return cropzone data if the cropzone is valid', () => {
+        it("should return cropzone data if the cropzone is valid", () => {
             cropper.start();
-            spyOn(cropper._cropzone, 'isValid').and.returnValue(true);
+            spyOn(cropper._cropzone, "isValid").and.returnValue(true);
 
-            expect(cropper.getCroppedImageData(cropper.getCropzoneRect())).toEqual({
+            expect(
+                cropper.getCroppedImageData(cropper.getCropzoneRect())
+            ).toEqual({
                 imageName: jasmine.any(String),
                 url: jasmine.any(String)
             });
@@ -249,54 +257,76 @@ describe('Cropper', () => {
             cropper.end();
         });
 
-        it('should return cropzone rect as a square', () => {
-            spyOn(cropper._cropzone, 'isValid').and.returnValue(true);
+        it("should return cropzone rect as a square", () => {
+            spyOn(cropper._cropzone, "isValid").and.returnValue(true);
             cropper.setCropzoneRect(1 / 1);
 
-            expect(cropper.getCropzoneRect().width).toBe(cropper.getCropzoneRect().height);
+            expect(cropper.getCropzoneRect().width).toBe(
+                cropper.getCropzoneRect().height
+            );
         });
 
-        it('should return cropzone rect as a 3:2 aspect box', () => {
-            spyOn(cropper._cropzone, 'isValid').and.returnValue(true);
+        it("should return cropzone rect as a 3:2 aspect box", () => {
+            spyOn(cropper._cropzone, "isValid").and.returnValue(true);
             cropper.setCropzoneRect(3 / 2);
 
-            expect((cropper.getCropzoneRect().width / cropper.getCropzoneRect().height).toFixed(1))
-                .toBe((3 / 2).toFixed(1));
+            expect(
+                (
+                    cropper.getCropzoneRect().width /
+                    cropper.getCropzoneRect().height
+                ).toFixed(1)
+            ).toBe((3 / 2).toFixed(1));
         });
 
-        it('should return cropzone rect as a 4:3 aspect box', () => {
-            spyOn(cropper._cropzone, 'isValid').and.returnValue(true);
+        it("should return cropzone rect as a 4:3 aspect box", () => {
+            spyOn(cropper._cropzone, "isValid").and.returnValue(true);
             cropper.setCropzoneRect(4 / 3);
 
-            expect((cropper.getCropzoneRect().width / cropper.getCropzoneRect().height).toFixed(1))
-                .toBe((4 / 3).toFixed(1));
+            expect(
+                (
+                    cropper.getCropzoneRect().width /
+                    cropper.getCropzoneRect().height
+                ).toFixed(1)
+            ).toBe((4 / 3).toFixed(1));
         });
 
-        it('should return cropzone rect as a 5:4 aspect box', () => {
-            spyOn(cropper._cropzone, 'isValid').and.returnValue(true);
+        it("should return cropzone rect as a 5:4 aspect box", () => {
+            spyOn(cropper._cropzone, "isValid").and.returnValue(true);
             cropper.setCropzoneRect(5 / 4);
 
-            expect((cropper.getCropzoneRect().width / cropper.getCropzoneRect().height).toFixed(1))
-                .toBe((5 / 4).toFixed(1));
+            expect(
+                (
+                    cropper.getCropzoneRect().width /
+                    cropper.getCropzoneRect().height
+                ).toFixed(1)
+            ).toBe((5 / 4).toFixed(1));
         });
 
-        it('should return cropzone rect as a 7:5 aspect box', () => {
-            spyOn(cropper._cropzone, 'isValid').and.returnValue(true);
+        it("should return cropzone rect as a 7:5 aspect box", () => {
+            spyOn(cropper._cropzone, "isValid").and.returnValue(true);
             cropper.setCropzoneRect(7 / 5);
 
-            expect((cropper.getCropzoneRect().width / cropper.getCropzoneRect().height).toFixed(1))
-                .toBe((7 / 5).toFixed(1));
+            expect(
+                (
+                    cropper.getCropzoneRect().width /
+                    cropper.getCropzoneRect().height
+                ).toFixed(1)
+            ).toBe((7 / 5).toFixed(1));
         });
 
-        it('should return cropzone rect as a 16:9 aspect box', () => {
-            spyOn(cropper._cropzone, 'isValid').and.returnValue(true);
+        it("should return cropzone rect as a 16:9 aspect box", () => {
+            spyOn(cropper._cropzone, "isValid").and.returnValue(true);
             cropper.setCropzoneRect(16 / 9);
 
-            expect((cropper.getCropzoneRect().width / cropper.getCropzoneRect().height).toFixed(1))
-                .toBe((16 / 9).toFixed(1));
+            expect(
+                (
+                    cropper.getCropzoneRect().width /
+                    cropper.getCropzoneRect().height
+                ).toFixed(1)
+            ).toBe((16 / 9).toFixed(1));
         });
 
-        it('should remove cropzone of cropper when falsy is passed', () => {
+        it("should remove cropzone of cropper when falsy is passed", () => {
             cropper.setCropzoneRect();
             expect(cropper.getCropzoneRect()).toBeFalsy();
 
@@ -309,7 +339,7 @@ describe('Cropper', () => {
     });
 
     describe('"end()"', () => {
-        it('should set cropzone of cropper to null', () => {
+        it("should set cropzone of cropper to null", () => {
             cropper.start();
             cropper.end();
 
@@ -318,9 +348,9 @@ describe('Cropper', () => {
 
         it('should set "evented" of all obejcts to true', () => {
             const objects = [
-                new fabric.Object({evented: false}),
-                new fabric.Object({evented: false}),
-                new fabric.Object({evented: false})
+                new fabric.Object({ evented: false }),
+                new fabric.Object({ evented: false }),
+                new fabric.Object({ evented: false })
             ];
             canvas.add(objects[0], objects[1], objects[2]);
 

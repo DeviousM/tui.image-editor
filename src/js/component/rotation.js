@@ -2,7 +2,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Image rotation module
  */
-import fabric from 'fabric/dist/fabric.require';
+import fabric from '../../libs/fabric.require';
 import Promise from 'core-js/library/es6/promise';
 import Component from '../interface/component';
 import consts from '../consts';
@@ -95,4 +95,4 @@ class Rotation extends Component {
     }
 }
 
-module.exports = Rotation;
+export default Rotation;

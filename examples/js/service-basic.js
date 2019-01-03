@@ -3,7 +3,7 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview
  */
-'use strict';
+"use strict";
 
 var supportingFileAPI = !!(window.File && window.FileList && window.FileReader);
 var rImageType = /data:(image\/.+);base64,/;
@@ -12,80 +12,82 @@ var shapeType;
 var activeObjectId;
 
 // Buttons
-var $btns = $('.menu-item');
-var $btnsActivatable = $btns.filter('.activatable');
-var $inputImage = $('#input-image-file');
-var $btnDownload = $('#btn-download');
+var $btns = $(".menu-item");
+var $btnsActivatable = $btns.filter(".activatable");
+var $inputImage = $("#input-image-file");
+var $btnDownload = $("#btn-download");
 
-var $btnUndo = $('#btn-undo');
-var $btnRedo = $('#btn-redo');
-var $btnClearObjects = $('#btn-clear-objects');
-var $btnRemoveActiveObject = $('#btn-remove-active-object');
-var $btnCrop = $('#btn-crop');
-var $btnFlip = $('#btn-flip');
-var $btnRotation = $('#btn-rotation');
-var $btnDrawLine = $('#btn-draw-line');
-var $btnDrawShape = $('#btn-draw-shape');
-var $btnApplyCrop = $('#btn-apply-crop');
-var $btnCancelCrop = $('#btn-cancel-crop');
-var $btnFlipX = $('#btn-flip-x');
-var $btnFlipY = $('#btn-flip-y');
-var $btnResetFlip = $('#btn-reset-flip');
-var $btnRotateClockwise = $('#btn-rotate-clockwise');
-var $btnRotateCounterClockWise = $('#btn-rotate-counter-clockwise');
-var $btnText = $('#btn-text');
-var $btnTextStyle = $('.btn-text-style');
-var $btnAddIcon = $('#btn-add-icon');
-var $btnRegisterIcon = $('#btn-register-icon');
-var $btnMaskFilter = $('#btn-mask-filter');
-var $btnImageFilter = $('#btn-image-filter');
-var $btnLoadMaskImage = $('#input-mask-image-file');
-var $btnApplyMask = $('#btn-apply-mask');
-var $btnClose = $('.close');
+var $btnUndo = $("#btn-undo");
+var $btnRedo = $("#btn-redo");
+var $btnClearObjects = $("#btn-clear-objects");
+var $btnRemoveActiveObject = $("#btn-remove-active-object");
+var $btnCrop = $("#btn-crop");
+var $btnFlip = $("#btn-flip");
+var $btnRotation = $("#btn-rotation");
+var $btnDrawLine = $("#btn-draw-line");
+var $btnDrawShape = $("#btn-draw-shape");
+var $btnApplyCrop = $("#btn-apply-crop");
+var $btnCancelCrop = $("#btn-cancel-crop");
+var $btnFlipX = $("#btn-flip-x");
+var $btnFlipY = $("#btn-flip-y");
+var $btnResetFlip = $("#btn-reset-flip");
+var $btnRotateClockwise = $("#btn-rotate-clockwise");
+var $btnRotateCounterClockWise = $("#btn-rotate-counter-clockwise");
+var $btnText = $("#btn-text");
+var $btnTextStyle = $(".btn-text-style");
+var $btnAddIcon = $("#btn-add-icon");
+var $btnRegisterIcon = $("#btn-register-icon");
+var $btnMaskFilter = $("#btn-mask-filter");
+var $btnImageFilter = $("#btn-image-filter");
+var $btnLoadMaskImage = $("#input-mask-image-file");
+var $btnApplyMask = $("#btn-apply-mask");
+var $btnClose = $(".close");
 
 // Input etc.
-var $inputRotationRange = $('#input-rotation-range');
-var $inputBrushWidthRange = $('#input-brush-width-range');
-var $inputFontSizeRange = $('#input-font-size-range');
-var $inputStrokeWidthRange = $('#input-stroke-width-range');
-var $inputCheckTransparent = $('#input-check-transparent');
-var $inputCheckGrayscale = $('#input-check-grayscale');
-var $inputCheckInvert = $('#input-check-invert');
-var $inputCheckSepia = $('#input-check-sepia');
-var $inputCheckSepia2 = $('#input-check-sepia2');
-var $inputCheckBlur = $('#input-check-blur');
-var $inputCheckSharpen = $('#input-check-sharpen');
-var $inputCheckEmboss = $('#input-check-emboss');
-var $inputCheckRemoveWhite = $('#input-check-remove-white');
-var $inputRangeRemoveWhiteThreshold = $('#input-range-remove-white-threshold');
-var $inputRangeRemoveWhiteDistance = $('#input-range-remove-white-distance');
-var $inputCheckBrightness = $('#input-check-brightness');
-var $inputRangeBrightnessValue = $('#input-range-brightness-value');
-var $inputCheckNoise = $('#input-check-noise');
-var $inputRangeNoiseValue = $('#input-range-noise-value');
-var $inputCheckGradientTransparency = $('#input-check-gradient-transparancy');
-var $inputRangeGradientTransparencyValue = $('#input-range-gradient-transparency-value');
-var $inputCheckPixelate = $('#input-check-pixelate');
-var $inputRangePixelateValue = $('#input-range-pixelate-value');
-var $inputCheckTint = $('#input-check-tint');
-var $inputRangeTintOpacityValue = $('#input-range-tint-opacity-value');
-var $inputCheckMultiply = $('#input-check-multiply');
-var $inputCheckBlend = $('#input-check-blend');
-var $inputCheckColorFilter = $('#input-check-color-filter');
-var $inputRangeColorFilterValue = $('#input-range-color-filter-value');
+var $inputRotationRange = $("#input-rotation-range");
+var $inputBrushWidthRange = $("#input-brush-width-range");
+var $inputFontSizeRange = $("#input-font-size-range");
+var $inputStrokeWidthRange = $("#input-stroke-width-range");
+var $inputCheckTransparent = $("#input-check-transparent");
+var $inputCheckGrayscale = $("#input-check-grayscale");
+var $inputCheckInvert = $("#input-check-invert");
+var $inputCheckSepia = $("#input-check-sepia");
+var $inputCheckSepia2 = $("#input-check-sepia2");
+var $inputCheckBlur = $("#input-check-blur");
+var $inputCheckSharpen = $("#input-check-sharpen");
+var $inputCheckEmboss = $("#input-check-emboss");
+var $inputCheckRemoveWhite = $("#input-check-remove-white");
+var $inputRangeRemoveWhiteThreshold = $("#input-range-remove-white-threshold");
+var $inputRangeRemoveWhiteDistance = $("#input-range-remove-white-distance");
+var $inputCheckBrightness = $("#input-check-brightness");
+var $inputRangeBrightnessValue = $("#input-range-brightness-value");
+var $inputCheckNoise = $("#input-check-noise");
+var $inputRangeNoiseValue = $("#input-range-noise-value");
+var $inputCheckGradientTransparency = $("#input-check-gradient-transparancy");
+var $inputRangeGradientTransparencyValue = $(
+    "#input-range-gradient-transparency-value"
+);
+var $inputCheckPixelate = $("#input-check-pixelate");
+var $inputRangePixelateValue = $("#input-range-pixelate-value");
+var $inputCheckTint = $("#input-check-tint");
+var $inputRangeTintOpacityValue = $("#input-range-tint-opacity-value");
+var $inputCheckMultiply = $("#input-check-multiply");
+var $inputCheckBlend = $("#input-check-blend");
+var $inputCheckColorFilter = $("#input-check-color-filter");
+var $inputRangeColorFilterValue = $("#input-range-color-filter-value");
 
 // Sub menus
 var $displayingSubMenu = $();
-var $cropSubMenu = $('#crop-sub-menu');
-var $flipSubMenu = $('#flip-sub-menu');
-var $rotationSubMenu = $('#rotation-sub-menu');
-var $freeDrawingSubMenu = $('#free-drawing-sub-menu');
-var $drawLineSubMenu = $('#draw-line-sub-menu');
-var $drawShapeSubMenu = $('#draw-shape-sub-menu');
-var $textSubMenu = $('#text-sub-menu');
-var $iconSubMenu = $('#icon-sub-menu');
-var $filterSubMenu = $('#filter-sub-menu');
-var $imageFilterSubMenu = $('#image-filter-sub-menu');
+var $cropSubMenu = $("#crop-sub-menu");
+var $flipSubMenu = $("#flip-sub-menu");
+var $rotationSubMenu = $("#rotation-sub-menu");
+var $freeDrawingSubMenu = $("#free-drawing-sub-menu");
+var $drawLineSubMenu = $("#draw-line-sub-menu");
+var $drawShapeSubMenu = $("#draw-shape-sub-menu");
+var $textSubMenu = $("#text-sub-menu");
+var $iconSubMenu = $("#icon-sub-menu");
+var $filterSubMenu = $("#filter-sub-menu");
+var $imageFilterSubMenu = $("#image-filter-sub-menu");
 
 // Select line type
 var $selectLine = $('[name="select-line-type"]');
@@ -100,7 +102,7 @@ var $selectColorType = $('[name="select-color-type"]');
 var $selectBlendType = $('[name="select-blend-type"]');
 
 // Image editor
-var imageEditor = new tui.ImageEditor('.tui-image-editor', {
+var imageEditor = new ImageEditor(".tui-image-editor", {
     cssMaxWidth: 700,
     cssMaxHeight: 500,
     selectionStyle: {
@@ -111,41 +113,41 @@ var imageEditor = new tui.ImageEditor('.tui-image-editor', {
 
 // Color picker for free drawing
 var brushColorpicker = tui.component.colorpicker.create({
-    container: $('#tui-brush-color-picker')[0],
-    color: '#000000'
+    container: $("#tui-brush-color-picker")[0],
+    color: "#000000"
 });
 
 // Color picker for text palette
 var textColorpicker = tui.component.colorpicker.create({
-    container: $('#tui-text-color-picker')[0],
-    color: '#000000'
+    container: $("#tui-text-color-picker")[0],
+    color: "#000000"
 });
 
 // Color picker for shape
 var shapeColorpicker = tui.component.colorpicker.create({
-    container: $('#tui-shape-color-picker')[0],
-    color: '#000000'
+    container: $("#tui-shape-color-picker")[0],
+    color: "#000000"
 });
 
 // Color picker for icon
 var iconColorpicker = tui.component.colorpicker.create({
-    container: $('#tui-icon-color-picker')[0],
-    color: '#000000'
+    container: $("#tui-icon-color-picker")[0],
+    color: "#000000"
 });
 
 var tintColorpicker = tui.component.colorpicker.create({
-    container: $('#tui-tint-color-picker')[0],
-    color: '#000000'
+    container: $("#tui-tint-color-picker")[0],
+    color: "#000000"
 });
 
 var multiplyColorpicker = tui.component.colorpicker.create({
-    container: $('#tui-multiply-color-picker')[0],
-    color: '#000000'
+    container: $("#tui-multiply-color-picker")[0],
+    color: "#000000"
 });
 
 var blendColorpicker = tui.component.colorpicker.create({
-    container: $('#tui-blend-color-picker')[0],
-    color: '#00FF00'
+    container: $("#tui-blend-color-picker")[0],
+    color: "#00FF00"
 });
 
 // Common global functions
@@ -156,17 +158,17 @@ function hexToRGBa(hex, alpha) {
     var b = parseInt(hex.slice(5, 7), 16);
     var a = alpha || 1;
 
-    return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')';
+    return "rgba(" + r + ", " + g + ", " + b + ", " + a + ")";
 }
 
 function base64ToBlob(data) {
-    var mimeString = '';
+    var mimeString = "";
     var raw, uInt8Array, i, rawLength;
 
     raw = data.replace(rImageType, function(header, imageType) {
         mimeString = imageType;
 
-        return '';
+        return "";
     });
 
     raw = atob(raw);
@@ -177,13 +179,13 @@ function base64ToBlob(data) {
         uInt8Array[i] = raw.charCodeAt(i);
     }
 
-    return new Blob([uInt8Array], {type: mimeString});
+    return new Blob([uInt8Array], { type: mimeString });
 }
 
 function resizeEditor() {
-    var $editor = $('.tui-image-editor');
-    var $container = $('.tui-image-editor-canvas-container');
-    var height = parseFloat($container.css('max-height'));
+    var $editor = $(".tui-image-editor");
+    var $container = $(".tui-image-editor-canvas-container");
+    var height = parseFloat($container.css("max-height"));
 
     $editor.height(height);
 }
@@ -199,9 +201,9 @@ function getBrushSettings() {
 }
 
 function activateShapeMode() {
-    if (imageEditor.getDrawingMode() !== 'SHAPE') {
+    if (imageEditor.getDrawingMode() !== "SHAPE") {
         imageEditor.stopDrawingMode();
-        imageEditor.startDrawingMode('SHAPE');
+        imageEditor.startDrawingMode("SHAPE");
     }
 }
 
@@ -210,9 +212,9 @@ function activateIconMode() {
 }
 
 function activateTextMode() {
-    if (imageEditor.getDrawingMode() !== 'TEXT') {
+    if (imageEditor.getDrawingMode() !== "TEXT") {
         imageEditor.stopDrawingMode();
-        imageEditor.startDrawingMode('TEXT');
+        imageEditor.startDrawingMode("TEXT");
     }
 }
 
@@ -234,23 +236,23 @@ function setShapeToolbar(obj) {
     var strokeColor, fillColor, isTransparent;
     var colorType = $selectColorType.val();
 
-    if (colorType === 'stroke') {
+    if (colorType === "stroke") {
         strokeColor = obj.stroke;
-        isTransparent = (strokeColor === 'transparent');
+        isTransparent = strokeColor === "transparent";
 
         if (!isTransparent) {
             shapeColorpicker.setColor(strokeColor);
         }
-    } else if (colorType === 'fill') {
+    } else if (colorType === "fill") {
         fillColor = obj.fill;
-        isTransparent = (fillColor === 'transparent');
+        isTransparent = fillColor === "transparent";
 
         if (!isTransparent) {
             shapeColorpicker.setColor(fillColor);
         }
     }
 
-    $inputCheckTransparent.prop('checked', isTransparent);
+    $inputCheckTransparent.prop("checked", isTransparent);
     $inputStrokeWidthRange.val(obj.strokeWidth);
 }
 
@@ -258,13 +260,13 @@ function showSubMenu(type) {
     var $submenu;
 
     switch (type) {
-        case 'shape':
+        case "shape":
             $submenu = $drawShapeSubMenu;
             break;
-        case 'icon':
+        case "icon":
             $submenu = $iconSubMenu;
             break;
-        case 'text':
+        case "text":
             $submenu = $textSubMenu;
             break;
         default:
@@ -292,51 +294,60 @@ imageEditor.on({
     },
     undoStackChanged: function(length) {
         if (length) {
-            $btnUndo.removeClass('disabled');
+            $btnUndo.removeClass("disabled");
         } else {
-            $btnUndo.addClass('disabled');
+            $btnUndo.addClass("disabled");
         }
         resizeEditor();
     },
     redoStackChanged: function(length) {
         if (length) {
-            $btnRedo.removeClass('disabled');
+            $btnRedo.removeClass("disabled");
         } else {
-            $btnRedo.addClass('disabled');
+            $btnRedo.addClass("disabled");
         }
         resizeEditor();
     },
     objectScaled: function(obj) {
-        if (obj.type === 'text') {
+        if (obj.type === "text") {
             $inputFontSizeRange.val(obj.fontSize);
         }
     },
     addText: function(pos) {
-        imageEditor.addText('Double Click', {
-            position: pos.originPosition
-        }).then(objectProps => {
-            console.log(objectProps);
-        });
+        imageEditor
+            .addText("Double Click", {
+                position: pos.originPosition
+            })
+            .then(objectProps => {
+                console.log(objectProps);
+            });
     },
     objectActivated: function(obj) {
         activeObjectId = obj.id;
-        if (obj.type === 'rect' || obj.type === 'circle' || obj.type === 'triangle') {
-            showSubMenu('shape');
+        if (
+            obj.type === "rect" ||
+            obj.type === "circle" ||
+            obj.type === "triangle"
+        ) {
+            showSubMenu("shape");
             setShapeToolbar(obj);
             activateShapeMode();
-        } else if (obj.type === 'icon') {
-            showSubMenu('icon');
+        } else if (obj.type === "icon") {
+            showSubMenu("icon");
             setIconToolbar(obj);
             activateIconMode();
-        } else if (obj.type === 'text') {
-            showSubMenu('text');
+        } else if (obj.type === "text") {
+            showSubMenu("text");
             setTextToolbar(obj);
             activateTextMode();
         }
     },
     mousedown: function(event, originPointer) {
-        if ($imageFilterSubMenu.is(':visible') && imageEditor.hasFilter('colorFilter')) {
-            imageEditor.applyFilter('colorFilter', {
+        if (
+            $imageFilterSubMenu.is(":visible") &&
+            imageEditor.hasFilter("colorFilter")
+        ) {
+            imageEditor.applyFilter("colorFilter", {
                 x: parseInt(originPointer.x, 10),
                 y: parseInt(originPointer.y, 10)
             });
@@ -345,130 +356,134 @@ imageEditor.on({
 });
 
 // Attach button click event listeners
-$btns.on('click', function() {
-    $btnsActivatable.removeClass('active');
+$btns.on("click", function() {
+    $btnsActivatable.removeClass("active");
 });
 
-$btnsActivatable.on('click', function() {
-    $(this).addClass('active');
+$btnsActivatable.on("click", function() {
+    $(this).addClass("active");
 });
 
-$btnUndo.on('click', function() {
+$btnUndo.on("click", function() {
     $displayingSubMenu.hide();
 
-    if (!$(this).hasClass('disabled')) {
+    if (!$(this).hasClass("disabled")) {
         imageEditor.undo();
     }
 });
 
-$btnRedo.on('click', function() {
+$btnRedo.on("click", function() {
     $displayingSubMenu.hide();
 
-    if (!$(this).hasClass('disabled')) {
+    if (!$(this).hasClass("disabled")) {
         imageEditor.redo();
     }
 });
 
-$btnClearObjects.on('click', function() {
+$btnClearObjects.on("click", function() {
     $displayingSubMenu.hide();
     imageEditor.clearObjects();
 });
 
-$btnRemoveActiveObject.on('click', function() {
+$btnRemoveActiveObject.on("click", function() {
     $displayingSubMenu.hide();
     imageEditor.removeObject(activeObjectId);
 });
 
-$btnCrop.on('click', function() {
-    imageEditor.startDrawingMode('CROPPER');
+$btnCrop.on("click", function() {
+    imageEditor.startDrawingMode("CROPPER");
     $displayingSubMenu.hide();
     $displayingSubMenu = $cropSubMenu.show();
 });
 
-$btnFlip.on('click', function() {
+$btnFlip.on("click", function() {
     imageEditor.stopDrawingMode();
     $displayingSubMenu.hide();
     $displayingSubMenu = $flipSubMenu.show();
 });
 
-$btnRotation.on('click', function() {
+$btnRotation.on("click", function() {
     imageEditor.stopDrawingMode();
     $displayingSubMenu.hide();
     $displayingSubMenu = $rotationSubMenu.show();
 });
 
-$btnClose.on('click', function() {
+$btnClose.on("click", function() {
     imageEditor.stopDrawingMode();
     $displayingSubMenu.hide();
 });
 
-$btnApplyCrop.on('click', function() {
+$btnApplyCrop.on("click", function() {
     imageEditor.crop(imageEditor.getCropzoneRect()).then(() => {
         imageEditor.stopDrawingMode();
         resizeEditor();
     });
 });
 
-$btnCancelCrop.on('click', function() {
+$btnCancelCrop.on("click", function() {
     imageEditor.stopDrawingMode();
 });
 
-$btnFlipX.on('click', function() {
+$btnFlipX.on("click", function() {
     imageEditor.flipX().then(status => {
-        console.log('flipX: ', status.flipX);
-        console.log('flipY: ', status.flipY);
-        console.log('angle: ', status.angle);
+        console.log("flipX: ", status.flipX);
+        console.log("flipY: ", status.flipY);
+        console.log("angle: ", status.angle);
     });
 });
 
-$btnFlipY.on('click', function() {
+$btnFlipY.on("click", function() {
     imageEditor.flipY().then(status => {
-        console.log('flipX: ', status.flipX);
-        console.log('flipY: ', status.flipY);
-        console.log('angle: ', status.angle);
+        console.log("flipX: ", status.flipX);
+        console.log("flipY: ", status.flipY);
+        console.log("angle: ", status.angle);
     });
 });
 
-$btnResetFlip.on('click', function() {
+$btnResetFlip.on("click", function() {
     imageEditor.resetFlip().then(status => {
-        console.log('flipX: ', status.flipX);
-        console.log('flipY: ', status.flipY);
-        console.log('angle: ', status.angle);
+        console.log("flipX: ", status.flipX);
+        console.log("flipY: ", status.flipY);
+        console.log("angle: ", status.angle);
     });
 });
 
-$btnRotateClockwise.on('click', function() {
+$btnRotateClockwise.on("click", function() {
     imageEditor.rotate(30);
 });
 
-$btnRotateCounterClockWise.on('click', function() {
+$btnRotateCounterClockWise.on("click", function() {
     imageEditor.rotate(-30);
 });
 
-$inputRotationRange.on('mousedown', function() {
+$inputRotationRange.on("mousedown", function() {
     var changeAngle = function() {
-        imageEditor.setAngle(parseInt($inputRotationRange.val(), 10)).catch(() => {});
+        imageEditor
+            .setAngle(parseInt($inputRotationRange.val(), 10))
+            .catch(() => {});
     };
-    $(document).on('mousemove', changeAngle);
-    $(document).on('mouseup', function stopChangingAngle() {
-        $(document).off('mousemove', changeAngle);
-        $(document).off('mouseup', stopChangingAngle);
+    $(document).on("mousemove", changeAngle);
+    $(document).on("mouseup", function stopChangingAngle() {
+        $(document).off("mousemove", changeAngle);
+        $(document).off("mouseup", stopChangingAngle);
     });
 });
 
-$inputRotationRange.on('change', function() {
-    imageEditor.setAngle(parseInt($inputRotationRange.val(), 10)).catch(() => {});
+$inputRotationRange.on("change", function() {
+    imageEditor
+        .setAngle(parseInt($inputRotationRange.val(), 10))
+        .catch(() => {});
 });
 
-$inputBrushWidthRange.on('change', function() {
-    imageEditor.setBrush({width: parseInt(this.value, 10)});
+$inputBrushWidthRange.on("change", function() {
+    imageEditor.setBrush({ width: parseInt(this.value, 10) });
 });
 
-$inputImage.on('change', function(event) {
+$inputImage.on("change", function(event) {
     var file;
 
     if (!supportingFileAPI) {
-        alert('This browser does not support file-api');
+        alert("This browser does not support file-api");
     }
 
     file = event.target.files[0];
@@ -478,62 +493,62 @@ $inputImage.on('change', function(event) {
     });
 });
 
-$btnDownload.on('click', function() {
+$btnDownload.on("click", function() {
     var imageName = imageEditor.getImageName();
     var dataURL = imageEditor.toDataURL();
     var blob, type, w;
 
     if (supportingFileAPI) {
         blob = base64ToBlob(dataURL);
-        type = blob.type.split('/')[1];
-        if (imageName.split('.').pop() !== type) {
-            imageName += '.' + type;
+        type = blob.type.split("/")[1];
+        if (imageName.split(".").pop() !== type) {
+            imageName += "." + type;
         }
 
         // Library: FileSaver - saveAs
         saveAs(blob, imageName); // eslint-disable-line
     } else {
-        alert('This browser needs a file-server');
+        alert("This browser needs a file-server");
         w = window.open();
-        w.document.body.innerHTML = '<img src=' + dataURL + '>';
+        w.document.body.innerHTML = "<img src=" + dataURL + ">";
     }
 });
 
 // control draw line mode
-$btnDrawLine.on('click', function() {
+$btnDrawLine.on("click", function() {
     imageEditor.stopDrawingMode();
     $displayingSubMenu.hide();
     $displayingSubMenu = $drawLineSubMenu.show();
     $selectLine.eq(0).change();
 });
 
-$selectLine.on('change', function() {
+$selectLine.on("change", function() {
     var mode = $(this).val();
     var settings = getBrushSettings();
 
     imageEditor.stopDrawingMode();
-    if (mode === 'freeDrawing') {
-        imageEditor.startDrawingMode('FREE_DRAWING', settings);
+    if (mode === "freeDrawing") {
+        imageEditor.startDrawingMode("FREE_DRAWING", settings);
     } else {
-        imageEditor.startDrawingMode('LINE_DRAWING', settings);
+        imageEditor.startDrawingMode("LINE_DRAWING", settings);
     }
 });
 
-brushColorpicker.on('selectColor', function(event) {
+brushColorpicker.on("selectColor", function(event) {
     imageEditor.setBrush({
         color: hexToRGBa(event.color, 0.5)
     });
 });
 
 // control draw shape mode
-$btnDrawShape.on('click', function() {
-    showSubMenu('shape');
+$btnDrawShape.on("click", function() {
+    showSubMenu("shape");
 
     // step 1. get options to draw shape from toolbar
     shapeType = $('[name="select-shape-type"]:checked').val();
 
-    shapeOptions.stroke = '#000000';
-    shapeOptions.fill = '#ffffff';
+    shapeOptions.stroke = "#000000";
+    shapeOptions.fill = "#ffffff";
 
     shapeOptions.strokeWidth = Number($inputStrokeWidthRange.val());
 
@@ -544,28 +559,28 @@ $btnDrawShape.on('click', function() {
     activateShapeMode();
 });
 
-$selectShapeType.on('change', function() {
+$selectShapeType.on("change", function() {
     shapeType = $(this).val();
 
     imageEditor.setDrawingShape(shapeType);
 });
 
-$inputCheckTransparent.on('change', function() {
+$inputCheckTransparent.on("change", function() {
     var colorType = $selectColorType.val();
-    var isTransparent = $(this).prop('checked');
+    var isTransparent = $(this).prop("checked");
     var color;
 
     if (!isTransparent) {
         color = shapeColorpicker.getColor();
     } else {
-        color = 'transparent';
+        color = "transparent";
     }
 
-    if (colorType === 'stroke') {
+    if (colorType === "stroke") {
         imageEditor.changeShape(activeObjectId, {
             stroke: color
         });
-    } else if (colorType === 'fill') {
+    } else if (colorType === "fill") {
         imageEditor.changeShape(activeObjectId, {
             fill: color
         });
@@ -574,20 +589,20 @@ $inputCheckTransparent.on('change', function() {
     imageEditor.setDrawingShape(shapeType, shapeOptions);
 });
 
-shapeColorpicker.on('selectColor', function(event) {
+shapeColorpicker.on("selectColor", function(event) {
     var colorType = $selectColorType.val();
-    var isTransparent = $inputCheckTransparent.prop('checked');
+    var isTransparent = $inputCheckTransparent.prop("checked");
     var color = event.color;
 
     if (isTransparent) {
         return;
     }
 
-    if (colorType === 'stroke') {
+    if (colorType === "stroke") {
         imageEditor.changeShape(activeObjectId, {
             stroke: color
         });
-    } else if (colorType === 'fill') {
+    } else if (colorType === "fill") {
         imageEditor.changeShape(activeObjectId, {
             fill: color
         });
@@ -596,7 +611,7 @@ shapeColorpicker.on('selectColor', function(event) {
     imageEditor.setDrawingShape(shapeType, shapeOptions);
 });
 
-$inputStrokeWidthRange.on('change', function() {
+$inputStrokeWidthRange.on("change", function() {
     var strokeWidth = Number($(this).val());
 
     imageEditor.changeShape(activeObjectId, {
@@ -607,41 +622,42 @@ $inputStrokeWidthRange.on('change', function() {
 });
 
 // control text mode
-$btnText.on('click', function() {
-    showSubMenu('text');
+$btnText.on("click", function() {
+    showSubMenu("text");
     activateTextMode();
 });
 
-$inputFontSizeRange.on('change', function() {
+$inputFontSizeRange.on("change", function() {
     imageEditor.changeTextStyle(activeObjectId, {
         fontSize: parseInt(this.value, 10)
     });
 });
 
-$btnTextStyle.on('click', function(e) { // eslint-disable-line
-    var styleType = $(this).attr('data-style-type');
+$btnTextStyle.on("click", function(e) {
+    // eslint-disable-line
+    var styleType = $(this).attr("data-style-type");
     var styleObj;
 
     e.stopPropagation();
 
     switch (styleType) {
-        case 'b':
-            styleObj = {fontWeight: 'bold'};
+        case "b":
+            styleObj = { fontWeight: "bold" };
             break;
-        case 'i':
-            styleObj = {fontStyle: 'italic'};
+        case "i":
+            styleObj = { fontStyle: "italic" };
             break;
-        case 'u':
-            styleObj = {textDecoration: 'underline'};
+        case "u":
+            styleObj = { textDecoration: "underline" };
             break;
-        case 'l':
-            styleObj = {textAlign: 'left'};
+        case "l":
+            styleObj = { textAlign: "left" };
             break;
-        case 'c':
-            styleObj = {textAlign: 'center'};
+        case "c":
+            styleObj = { textAlign: "center" };
             break;
-        case 'r':
-            styleObj = {textAlign: 'right'};
+        case "r":
+            styleObj = { textAlign: "right" };
             break;
         default:
             styleObj = {};
@@ -650,94 +666,100 @@ $btnTextStyle.on('click', function(e) { // eslint-disable-line
     imageEditor.changeTextStyle(activeObjectId, styleObj);
 });
 
-textColorpicker.on('selectColor', function(event) {
+textColorpicker.on("selectColor", function(event) {
     imageEditor.changeTextStyle(activeObjectId, {
-        'fill': event.color
+        fill: event.color
     });
 });
 
 // control icon
-$btnAddIcon.on('click', function() {
-    showSubMenu('icon');
+$btnAddIcon.on("click", function() {
+    showSubMenu("icon");
     activateIconMode();
 });
 
 function onClickIconSubMenu(event) {
     var element = event.target || event.srcElement;
-    var iconType = $(element).attr('data-icon-type');
+    var iconType = $(element).attr("data-icon-type");
 
-    imageEditor.once('mousedown', function(e, originPointer) {
-        imageEditor.addIcon(iconType, {
-            left: originPointer.x,
-            top: originPointer.y
-        }).then(objectProps => {
-            // console.log(objectProps);
-        });
+    imageEditor.once("mousedown", function(e, originPointer) {
+        imageEditor
+            .addIcon(iconType, {
+                left: originPointer.x,
+                top: originPointer.y
+            })
+            .then(objectProps => {
+                // console.log(objectProps);
+            });
     });
 }
 
-$btnRegisterIcon.on('click', function() {
-    $iconSubMenu.find('.menu-item').eq(3).after(
-        '<li id="customArrow" class="menu-item icon-text" data-icon-type="customArrow">↑</li>'
-    );
+$btnRegisterIcon.on("click", function() {
+    $iconSubMenu
+        .find(".menu-item")
+        .eq(3)
+        .after(
+            '<li id="customArrow" class="menu-item icon-text" data-icon-type="customArrow">↑</li>'
+        );
 
     imageEditor.registerIcons({
-        customArrow: 'M 60 0 L 120 60 H 90 L 75 45 V 180 H 45 V 45 L 30 60 H 0 Z'
+        customArrow:
+            "M 60 0 L 120 60 H 90 L 75 45 V 180 H 45 V 45 L 30 60 H 0 Z"
     });
 
-    $btnRegisterIcon.off('click');
+    $btnRegisterIcon.off("click");
 
-    $iconSubMenu.on('click', '#customArrow', onClickIconSubMenu);
+    $iconSubMenu.on("click", "#customArrow", onClickIconSubMenu);
 });
 
-$iconSubMenu.on('click', '.icon-text', onClickIconSubMenu);
+$iconSubMenu.on("click", ".icon-text", onClickIconSubMenu);
 
-iconColorpicker.on('selectColor', function(event) {
+iconColorpicker.on("selectColor", function(event) {
     imageEditor.changeIconColor(activeObjectId, event.color);
 });
 
 // control mask filter
-$btnMaskFilter.on('click', function() {
+$btnMaskFilter.on("click", function() {
     imageEditor.stopDrawingMode();
     $displayingSubMenu.hide();
 
     $displayingSubMenu = $filterSubMenu.show();
 });
 
-$btnImageFilter.on('click', function() {
+$btnImageFilter.on("click", function() {
     var filters = {
-        'grayscale': $inputCheckGrayscale,
-        'invert': $inputCheckInvert,
-        'sepia': $inputCheckSepia,
-        'sepia2': $inputCheckSepia2,
-        'blur': $inputCheckBlur,
-        'shapren': $inputCheckSharpen,
-        'emboss': $inputCheckEmboss,
-        'removeWhite': $inputCheckRemoveWhite,
-        'brightness': $inputCheckBrightness,
-        'noise': $inputCheckNoise,
-        'gradientTransparency': $inputCheckGradientTransparency,
-        'pixelate': $inputCheckPixelate,
-        'tint': $inputCheckTint,
-        'multiply': $inputCheckMultiply,
-        'blend': $inputCheckBlend,
-        'colorFilter': $inputCheckColorFilter
+        grayscale: $inputCheckGrayscale,
+        invert: $inputCheckInvert,
+        sepia: $inputCheckSepia,
+        sepia2: $inputCheckSepia2,
+        blur: $inputCheckBlur,
+        shapren: $inputCheckSharpen,
+        emboss: $inputCheckEmboss,
+        removeWhite: $inputCheckRemoveWhite,
+        brightness: $inputCheckBrightness,
+        noise: $inputCheckNoise,
+        gradientTransparency: $inputCheckGradientTransparency,
+        pixelate: $inputCheckPixelate,
+        tint: $inputCheckTint,
+        multiply: $inputCheckMultiply,
+        blend: $inputCheckBlend,
+        colorFilter: $inputCheckColorFilter
     };
 
     tui.util.forEach(filters, function($value, key) {
-        $value.prop('checked', imageEditor.hasFilter(key));
+        $value.prop("checked", imageEditor.hasFilter(key));
     });
     $displayingSubMenu.hide();
 
     $displayingSubMenu = $imageFilterSubMenu.show();
 });
 
-$btnLoadMaskImage.on('change', function() {
+$btnLoadMaskImage.on("change", function() {
     var file;
     var imgUrl;
 
     if (!supportingFileAPI) {
-        alert('This browser does not support file-api');
+        alert("This browser does not support file-api");
     }
 
     file = event.target.files[0];
@@ -745,177 +767,185 @@ $btnLoadMaskImage.on('change', function() {
     if (file) {
         imgUrl = URL.createObjectURL(file);
 
-        imageEditor.loadImageFromURL(imageEditor.toDataURL(), 'FilterImage').then(() => {
-            imageEditor.addImageObject(imgUrl).then(objectProps => {
-                URL.revokeObjectURL(file);
-                console.log(objectProps);
+        imageEditor
+            .loadImageFromURL(imageEditor.toDataURL(), "FilterImage")
+            .then(() => {
+                imageEditor.addImageObject(imgUrl).then(objectProps => {
+                    URL.revokeObjectURL(file);
+                    console.log(objectProps);
+                });
             });
-        });
     }
 });
 
-$btnApplyMask.on('click', function() {
-    imageEditor.applyFilter('mask', {
-        maskObjId: activeObjectId
-    }).then(result => {
-        console.log(result);
-    });
+$btnApplyMask.on("click", function() {
+    imageEditor
+        .applyFilter("mask", {
+            maskObjId: activeObjectId
+        })
+        .then(result => {
+            console.log(result);
+        });
 });
 
-$inputCheckGrayscale.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'Grayscale', null);
+$inputCheckGrayscale.on("change", function() {
+    applyOrRemoveFilter(this.checked, "Grayscale", null);
 });
 
-$inputCheckInvert.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'Invert', null);
+$inputCheckInvert.on("change", function() {
+    applyOrRemoveFilter(this.checked, "Invert", null);
 });
 
-$inputCheckSepia.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'Sepia', null);
+$inputCheckSepia.on("change", function() {
+    applyOrRemoveFilter(this.checked, "Sepia", null);
 });
 
-$inputCheckSepia2.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'Sepia2', null);
+$inputCheckSepia2.on("change", function() {
+    applyOrRemoveFilter(this.checked, "Sepia2", null);
 });
 
-$inputCheckBlur.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'Blur', null);
+$inputCheckBlur.on("change", function() {
+    applyOrRemoveFilter(this.checked, "Blur", null);
 });
 
-$inputCheckSharpen.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'Sharpen', null);
+$inputCheckSharpen.on("change", function() {
+    applyOrRemoveFilter(this.checked, "Sharpen", null);
 });
 
-$inputCheckEmboss.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'Emboss', null);
+$inputCheckEmboss.on("change", function() {
+    applyOrRemoveFilter(this.checked, "Emboss", null);
 });
 
-$inputCheckRemoveWhite.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'removeWhite', {
+$inputCheckRemoveWhite.on("change", function() {
+    applyOrRemoveFilter(this.checked, "removeWhite", {
         threshold: parseInt($inputRangeRemoveWhiteThreshold.val(), 10),
         distance: parseInt($inputRangeRemoveWhiteDistance.val(), 10)
     });
 });
 
-$inputRangeRemoveWhiteThreshold.on('change', function() {
-    applyOrRemoveFilter($inputCheckRemoveWhite.is(':checked'), 'removeWhite', {
+$inputRangeRemoveWhiteThreshold.on("change", function() {
+    applyOrRemoveFilter($inputCheckRemoveWhite.is(":checked"), "removeWhite", {
         threshold: parseInt(this.value, 10)
     });
 });
 
-$inputRangeRemoveWhiteDistance.on('change', function() {
-    applyOrRemoveFilter($inputCheckRemoveWhite.is(':checked'), 'removeWhite', {
+$inputRangeRemoveWhiteDistance.on("change", function() {
+    applyOrRemoveFilter($inputCheckRemoveWhite.is(":checked"), "removeWhite", {
         distance: parseInt(this.value, 10)
     });
 });
 
-$inputCheckBrightness.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'brightness', {
+$inputCheckBrightness.on("change", function() {
+    applyOrRemoveFilter(this.checked, "brightness", {
         brightness: parseInt($inputRangeBrightnessValue.val(), 10)
     });
 });
 
-$inputRangeBrightnessValue.on('change', function() {
-    applyOrRemoveFilter($inputCheckBrightness.is(':checked'), 'brightness', {
+$inputRangeBrightnessValue.on("change", function() {
+    applyOrRemoveFilter($inputCheckBrightness.is(":checked"), "brightness", {
         brightness: parseInt(this.value, 10)
     });
 });
 
-$inputCheckNoise.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'noise', {
+$inputCheckNoise.on("change", function() {
+    applyOrRemoveFilter(this.checked, "noise", {
         noise: parseInt($inputRangeNoiseValue.val(), 10)
     });
 });
 
-$inputRangeNoiseValue.on('change', function() {
-    applyOrRemoveFilter($inputCheckNoise.is(':checked'), 'noise', {
+$inputRangeNoiseValue.on("change", function() {
+    applyOrRemoveFilter($inputCheckNoise.is(":checked"), "noise", {
         noise: parseInt(this.value, 10)
     });
 });
 
-$inputCheckGradientTransparency.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'gradientTransparency', {
+$inputCheckGradientTransparency.on("change", function() {
+    applyOrRemoveFilter(this.checked, "gradientTransparency", {
         threshold: parseInt($inputRangeGradientTransparencyValue.val(), 10)
     });
 });
 
-$inputRangeGradientTransparencyValue.on('change', function() {
-    applyOrRemoveFilter($inputCheckGradientTransparency.is(':checked'), 'gradientTransparency', {
-        threshold: parseInt(this.value, 10)
-    });
+$inputRangeGradientTransparencyValue.on("change", function() {
+    applyOrRemoveFilter(
+        $inputCheckGradientTransparency.is(":checked"),
+        "gradientTransparency",
+        {
+            threshold: parseInt(this.value, 10)
+        }
+    );
 });
 
-$inputCheckPixelate.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'pixelate', {
+$inputCheckPixelate.on("change", function() {
+    applyOrRemoveFilter(this.checked, "pixelate", {
         blocksize: parseInt($inputRangePixelateValue.val(), 10)
     });
 });
 
-$inputRangePixelateValue.on('change', function() {
-    applyOrRemoveFilter($inputCheckPixelate.is(':checked'), 'pixelate', {
+$inputRangePixelateValue.on("change", function() {
+    applyOrRemoveFilter($inputCheckPixelate.is(":checked"), "pixelate", {
         blocksize: parseInt(this.value, 10)
     });
 });
 
-$inputCheckTint.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'tint', {
+$inputCheckTint.on("change", function() {
+    applyOrRemoveFilter(this.checked, "tint", {
         color: tintColorpicker.getColor(),
         opacity: parseFloat($inputRangeTintOpacityValue.val())
     });
 });
 
-tintColorpicker.on('selectColor', function(e) {
-    applyOrRemoveFilter($inputCheckTint.is(':checked'), 'tint', {
+tintColorpicker.on("selectColor", function(e) {
+    applyOrRemoveFilter($inputCheckTint.is(":checked"), "tint", {
         color: e.color
     });
 });
 
-$inputRangeTintOpacityValue.on('change', function() {
-    applyOrRemoveFilter($inputCheckTint.is(':checked'), 'tint', {
+$inputRangeTintOpacityValue.on("change", function() {
+    applyOrRemoveFilter($inputCheckTint.is(":checked"), "tint", {
         opacity: parseFloat($inputRangeTintOpacityValue.val())
     });
 });
 
-$inputCheckMultiply.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'multiply', {
+$inputCheckMultiply.on("change", function() {
+    applyOrRemoveFilter(this.checked, "multiply", {
         color: multiplyColorpicker.getColor()
     });
 });
 
-multiplyColorpicker.on('selectColor', function(e) {
-    applyOrRemoveFilter($inputCheckMultiply.is(':checked'), 'multiply', {
+multiplyColorpicker.on("selectColor", function(e) {
+    applyOrRemoveFilter($inputCheckMultiply.is(":checked"), "multiply", {
         color: e.color
     });
 });
 
-$inputCheckBlend.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'blend', {
+$inputCheckBlend.on("change", function() {
+    applyOrRemoveFilter(this.checked, "blend", {
         color: blendColorpicker.getColor(),
         mode: $selectBlendType.val()
     });
 });
 
-blendColorpicker.on('selectColor', function(e) {
-    applyOrRemoveFilter($inputCheckBlend.is(':checked'), 'blend', {
+blendColorpicker.on("selectColor", function(e) {
+    applyOrRemoveFilter($inputCheckBlend.is(":checked"), "blend", {
         color: e.color
     });
 });
 
-$selectBlendType.on('change', function() {
-    applyOrRemoveFilter($inputCheckBlend.is(':checked'), 'blend', {
+$selectBlendType.on("change", function() {
+    applyOrRemoveFilter($inputCheckBlend.is(":checked"), "blend", {
         mode: this.value
     });
 });
 
-$inputCheckColorFilter.on('change', function() {
-    applyOrRemoveFilter(this.checked, 'colorFilter', {
-        color: '#FFFFFF',
+$inputCheckColorFilter.on("change", function() {
+    applyOrRemoveFilter(this.checked, "colorFilter", {
+        color: "#FFFFFF",
         threshold: $inputRangeColorFilterValue.val()
     });
 });
 
-$inputRangeColorFilterValue.on('change', function() {
-    applyOrRemoveFilter($inputCheckColorFilter.is(':checked'), 'colorFilter', {
+$inputRangeColorFilterValue.on("change", function() {
+    applyOrRemoveFilter($inputCheckColorFilter.is(":checked"), "colorFilter", {
         threshold: this.value
     });
 });
@@ -923,12 +953,14 @@ $inputRangeColorFilterValue.on('change', function() {
 // Etc..
 
 // Load sample image
-imageEditor.loadImageFromURL('img/sampleImage.jpg', 'SampleImage').then(sizeValue => {
-    console.log(sizeValue);
-    imageEditor.clearUndoStack();
-});
+imageEditor
+    .loadImageFromURL("img/sampleImage.jpg", "SampleImage")
+    .then(sizeValue => {
+        console.log(sizeValue);
+        imageEditor.clearUndoStack();
+    });
 
 // IE9 Unselectable
-$('.menu').on('selectstart', function() {
+$(".menu").on("selectstart", function() {
     return false;
 });

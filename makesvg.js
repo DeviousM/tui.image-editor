@@ -1,5 +1,4 @@
 const fs = require('fs');
-const mkdirp = require('mkdirp');
 const svgstore = require('svgstore');
 const svgDir = './src/svg';
 
@@ -18,14 +17,9 @@ function getFileList(dir) {
     });
 }
 
-mkdirp('./dist/svg', (mkdirpErr) => {
-    if (mkdirpErr) {
-        console.error(mkdirpErr);
-    } else {
-        fs.readdir(svgDir, (err, dirs) => {
-            dirs.forEach(dir => {
-                getFileList(dir);
-            });
-        });
-    }
-});
+fs.readdir('./src/svg', (err, dirs) => {
+    dirs.forEach(dir => {
+        getFileList(dir);
+    });
+})
+

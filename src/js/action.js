@@ -1,9 +1,8 @@
-import {extend} from 'tui-code-snippet';
-import util from './util';
-import Imagetracer from './helper/imagetracer';
+import { extend } from "./tui-code-snippet";
+import util from "./util";
+import Imagetracer from "./helper/imagetracer";
 
 export default {
-
     /**
      * Get ui actions
      * @returns {Object} actions for ui
@@ -31,86 +30,93 @@ export default {
      */
     _mainAction() {
         const exitCropOnAction = () => {
-            if (this.ui.submenu === 'crop') {
+            if (this.ui.submenu === "crop") {
                 this.stopDrawingMode();
-                this.ui.changeMenu('crop');
+                this.ui.changeMenu("crop");
             }
         };
 
-        return extend({
-            initLoadImage: (imagePath, imageName) => (
-                this.loadImageFromURL(imagePath, imageName).then(sizeValue => {
-                    exitCropOnAction();
-                    this.ui.initializeImgUrl = imagePath;
-                    this.ui.resizeEditor({imageSize: sizeValue});
-                    this.clearUndoStack();
-                })
-            ),
-            undo: () => {
-                if (!this.isEmptyUndoStack()) {
-                    exitCropOnAction();
-                    this.undo();
-                }
-            },
-            redo: () => {
-                if (!this.isEmptyRedoStack()) {
-                    exitCropOnAction();
-                    this.redo();
-                }
-            },
-            reset: () => {
-                exitCropOnAction();
-                this.loadImageFromURL(this.ui.initializeImgUrl, 'resetImage').then(sizeValue => {
-                    exitCropOnAction();
-                    this.ui.resizeEditor({imageSize: sizeValue});
-                    this.clearUndoStack();
-                });
-            },
-            delete: () => {
-                this.ui.changeDeleteButtonEnabled(false);
-                exitCropOnAction();
-                this.removeActiveObject();
-                this.activeObjectId = null;
-            },
-            deleteAll: () => {
-                exitCropOnAction();
-                this.clearObjects();
-                this.ui.changeDeleteButtonEnabled(false);
-                this.ui.changeDeleteAllButtonEnabled(false);
-            },
-            load: file => {
-                if (!util.isSupportFileApi()) {
-                    alert('This browser does not support file-api');
-                }
-
-                this.ui.initializeImgUrl = URL.createObjectURL(file);
-                this.loadImageFromFile(file).then(sizeValue => {
-                    exitCropOnAction();
-                    this.clearUndoStack();
-                    this.ui.activeMenuEvent();
-                    this.ui.resizeEditor({imageSize: sizeValue});
-                })['catch'](message => (
-                    Promise.reject(message)
-                ));
-            },
-            download: () => {
-                const dataURL = this.toDataURL();
-                let imageName = this.getImageName();
-                let blob, type, w;
-
-                if (util.isSupportFileApi() && window.saveAs) {
-                    blob = util.base64ToBlob(dataURL);
-                    type = blob.type.split('/')[1];
-                    if (imageName.split('.').pop() !== type) {
-                        imageName += `.${type}`;
+        return extend(
+            {
+                initLoadImage: (imagePath, imageName) =>
+                    this.loadImageFromURL(imagePath, imageName).then(
+                        sizeValue => {
+                            exitCropOnAction();
+                            this.ui.initializeImgUrl = imagePath;
+                            this.ui.resizeEditor({ imageSize: sizeValue });
+                            this.clearUndoStack();
+                        }
+                    ),
+                undo: () => {
+                    if (!this.isEmptyUndoStack()) {
+                        exitCropOnAction();
+                        this.undo();
                     }
-                    saveAs(blob, imageName); // eslint-disable-line
-                } else {
-                    w = window.open();
-                    w.document.body.innerHTML = `<img src='${dataURL}'>`;
+                },
+                redo: () => {
+                    if (!this.isEmptyRedoStack()) {
+                        exitCropOnAction();
+                        this.redo();
+                    }
+                },
+                reset: () => {
+                    exitCropOnAction();
+                    this.loadImageFromURL(
+                        this.ui.initializeImgUrl,
+                        "resetImage"
+                    ).then(sizeValue => {
+                        exitCropOnAction();
+                        this.ui.resizeEditor({ imageSize: sizeValue });
+                        this.clearUndoStack();
+                    });
+                },
+                delete: () => {
+                    this.ui.changeDeleteButtonEnabled(false);
+                    exitCropOnAction();
+                    this.removeActiveObject();
+                    this.activeObjectId = null;
+                },
+                deleteAll: () => {
+                    exitCropOnAction();
+                    this.clearObjects();
+                    this.ui.changeDeleteButtonEnabled(false);
+                    this.ui.changeDeleteAllButtonEnabled(false);
+                },
+                load: file => {
+                    if (!util.isSupportFileApi()) {
+                        alert("This browser does not support file-api");
+                    }
+
+                    this.ui.initializeImgUrl = URL.createObjectURL(file);
+                    this.loadImageFromFile(file)
+                        .then(sizeValue => {
+                            exitCropOnAction();
+                            this.clearUndoStack();
+                            this.ui.activeMenuEvent();
+                            this.ui.resizeEditor({ imageSize: sizeValue });
+                        })
+                        ["catch"](message => Promise.reject(message));
+                },
+                download: () => {
+                    const dataURL = this.toDataURL();
+                    let imageName = this.getImageName();
+                    let blob, type, w;
+
+                    if (util.isSupportFileApi() && window.saveAs) {
+                        blob = util.base64ToBlob(dataURL);
+                        type = blob.type.split("/")[1];
+                        if (imageName.split(".").pop() !== type) {
+                            imageName += `.${type}`;
+                        }
+                        saveAs(blob, imageName); // eslint-disable-line
+                    } else {
+                        w = window.open();
+                        w.document.body.innerHTML = `<img src='${dataURL}'>`;
+                    }
                 }
-            }
-        }, this._commonAction());
+            },
+            this._commonAction()
+        );
     },
 
     /**
@@ -128,7 +134,7 @@ export default {
         let objId;
 
         this.on({
-            'iconCreateResize': ({moveOriginPointer}) => {
+            iconCreateResize: ({ moveOriginPointer }) => {
                 const scaleX = (moveOriginPointer.x - startX) / iconWidth;
                 const scaleY = (moveOriginPointer.y - startY) / iconHeight;
 
@@ -137,7 +143,7 @@ export default {
                     scaleY: Math.abs(scaleY * 2)
                 });
             },
-            'iconCreateEnd': () => {
+            iconCreateEnd: () => {
                 this.ui.icon.clearIconType();
                 this.changeSelectableAll(true);
             }
@@ -158,48 +164,54 @@ export default {
             });
         };
 
-        return extend({
-            changeColor: color => {
-                if (this.activeObjectId) {
-                    this.changeIconColor(this.activeObjectId, color);
+        return extend(
+            {
+                changeColor: color => {
+                    if (this.activeObjectId) {
+                        this.changeIconColor(this.activeObjectId, color);
+                    }
+                },
+                addIcon: (iconType, iconColor) => {
+                    cacheIconType = iconType;
+                    cacheIconColor = iconColor;
+                    // this.readyAddIcon();
+                    this.changeCursor("crosshair");
+                    this.off("mousedown");
+                    this.once("mousedown", mouseDown.bind(this));
+                },
+                cancelAddIcon: () => {
+                    this.off("mousedown");
+                    this.ui.icon.clearIconType();
+                    this.changeSelectableAll(true);
+                    this.changeCursor("default");
+                },
+                registDefalutIcons: (type, path) => {
+                    const iconObj = {};
+                    iconObj[type] = path;
+                    this.registerIcons(iconObj);
+                },
+                registCustomIcon: (imgUrl, file) => {
+                    const imagetracer = new Imagetracer();
+                    imagetracer.imageToSVG(
+                        imgUrl,
+                        svgstr => {
+                            const [, svgPath] = svgstr.match(
+                                /path[^>]*d="([^"]*)"/
+                            );
+                            const iconObj = {};
+                            iconObj[file.name] = svgPath;
+                            this.registerIcons(iconObj);
+                            this.addIcon(file.name, {
+                                left: 100,
+                                top: 100
+                            });
+                        },
+                        Imagetracer.tracerDefaultOption()
+                    );
                 }
             },
-            addIcon: (iconType, iconColor) => {
-                cacheIconType = iconType;
-                cacheIconColor = iconColor;
-                // this.readyAddIcon();
-                this.changeCursor('crosshair');
-                this.off('mousedown');
-                this.once('mousedown', mouseDown.bind(this));
-            },
-            cancelAddIcon: () => {
-                this.off('mousedown');
-                this.ui.icon.clearIconType();
-                this.changeSelectableAll(true);
-                this.changeCursor('default');
-            },
-            registDefalutIcons: (type, path) => {
-                const iconObj = {};
-                iconObj[type] = path;
-                this.registerIcons(iconObj);
-            },
-            registCustomIcon: (imgUrl, file) => {
-                const imagetracer = new Imagetracer();
-                imagetracer.imageToSVG(
-                    imgUrl,
-                    svgstr => {
-                        const [, svgPath] = svgstr.match(/path[^>]*d="([^"]*)"/);
-                        const iconObj = {};
-                        iconObj[file.name] = svgPath;
-                        this.registerIcons(iconObj);
-                        this.addIcon(file.name, {
-                            left: 100,
-                            top: 100
-                        });
-                    }, Imagetracer.tracerDefaultOption()
-                );
-            }
-        }, this._commonAction());
+            this._commonAction()
+        );
     },
 
     /**
@@ -208,21 +220,24 @@ export default {
      * @private
      */
     _drawAction() {
-        return extend({
-            setDrawMode: (type, settings) => {
-                this.stopDrawingMode();
-                if (type === 'free') {
-                    this.startDrawingMode('FREE_DRAWING', settings);
-                } else {
-                    this.startDrawingMode('LINE_DRAWING', settings);
+        return extend(
+            {
+                setDrawMode: (type, settings) => {
+                    this.stopDrawingMode();
+                    if (type === "free") {
+                        this.startDrawingMode("FREE_DRAWING", settings);
+                    } else {
+                        this.startDrawingMode("LINE_DRAWING", settings);
+                    }
+                },
+                setColor: color => {
+                    this.setBrush({
+                        color
+                    });
                 }
             },
-            setColor: color => {
-                this.setBrush({
-                    color
-                });
-            }
-        }, this._commonAction());
+            this._commonAction()
+        );
     },
 
     /**
@@ -231,20 +246,24 @@ export default {
      * @private
      */
     _maskAction() {
-        return extend({
-            loadImageFromURL: (imgUrl, file) => (
-                this.loadImageFromURL(this.toDataURL(), 'FilterImage').then(() => {
-                    this.addImageObject(imgUrl).then(() => {
-                        URL.revokeObjectURL(file);
+        return extend(
+            {
+                loadImageFromURL: (imgUrl, file) =>
+                    this.loadImageFromURL(this.toDataURL(), "FilterImage").then(
+                        () => {
+                            this.addImageObject(imgUrl).then(() => {
+                                URL.revokeObjectURL(file);
+                            });
+                        }
+                    ),
+                applyFilter: () => {
+                    this.applyFilter("mask", {
+                        maskObjId: this.activeObjectId
                     });
-                })
-            ),
-            applyFilter: () => {
-                this.applyFilter('mask', {
-                    maskObjId: this.activeObjectId
-                });
-            }
-        }, this._commonAction());
+                }
+            },
+            this._commonAction()
+        );
     },
 
     /**
@@ -253,13 +272,16 @@ export default {
      * @private
      */
     _textAction() {
-        return extend({
-            changeTextStyle: styleObj => {
-                if (this.activeObjectId) {
-                    this.changeTextStyle(this.activeObjectId, styleObj);
+        return extend(
+            {
+                changeTextStyle: styleObj => {
+                    if (this.activeObjectId) {
+                        this.changeTextStyle(this.activeObjectId, styleObj);
+                    }
                 }
-            }
-        }, this._commonAction());
+            },
+            this._commonAction()
+        );
     },
 
     /**
@@ -268,16 +290,19 @@ export default {
      * @private
      */
     _rotateAction() {
-        return extend({
-            rotate: angle => {
-                this.rotate(angle);
-                this.ui.resizeEditor();
+        return extend(
+            {
+                rotate: angle => {
+                    this.rotate(angle);
+                    this.ui.resizeEditor();
+                },
+                setAngle: angle => {
+                    this.setAngle(angle);
+                    this.ui.resizeEditor();
+                }
             },
-            setAngle: angle => {
-                this.setAngle(angle);
-                this.ui.resizeEditor();
-            }
-        }, this._commonAction());
+            this._commonAction()
+        );
     },
 
     /**
@@ -286,16 +311,22 @@ export default {
      * @private
      */
     _shapeAction() {
-        return extend({
-            changeShape: changeShapeObject => {
-                if (this.activeObjectId) {
-                    this.changeShape(this.activeObjectId, changeShapeObject);
+        return extend(
+            {
+                changeShape: changeShapeObject => {
+                    if (this.activeObjectId) {
+                        this.changeShape(
+                            this.activeObjectId,
+                            changeShapeObject
+                        );
+                    }
+                },
+                setDrawingShape: shapeType => {
+                    this.setDrawingShape(shapeType);
                 }
             },
-            setDrawingShape: shapeType => {
-                this.setDrawingShape(shapeType);
-            }
-        }, this._commonAction());
+            this._commonAction()
+        );
     },
 
     /**
@@ -304,50 +335,53 @@ export default {
      * @private
      */
     _cropAction() {
-        return extend({
-            crop: () => {
-                const cropRect = this.getCropzoneRect();
-                if (cropRect) {
-                    this.crop(cropRect).then(() => {
-                        this.stopDrawingMode();
-                        this.ui.resizeEditor();
-                        this.ui.changeMenu('crop');
-                    })['catch'](message => (
-                        Promise.reject(message)
-                    ));
+        return extend(
+            {
+                crop: () => {
+                    const cropRect = this.getCropzoneRect();
+                    if (cropRect) {
+                        this.crop(cropRect)
+                            .then(() => {
+                                this.stopDrawingMode();
+                                this.ui.resizeEditor();
+                                this.ui.changeMenu("crop");
+                            })
+                            ["catch"](message => Promise.reject(message));
+                    }
+                },
+                cancel: () => {
+                    this.stopDrawingMode();
+                    this.ui.changeMenu("crop");
+                },
+                preset: presetType => {
+                    switch (presetType) {
+                        case "preset-square":
+                            this.setCropzoneRect(1 / 1);
+                            break;
+                        case "preset-3-2":
+                            this.setCropzoneRect(3 / 2);
+                            break;
+                        case "preset-4-3":
+                            this.setCropzoneRect(4 / 3);
+                            break;
+                        case "preset-5-4":
+                            this.setCropzoneRect(5 / 4);
+                            break;
+                        case "preset-7-5":
+                            this.setCropzoneRect(7 / 5);
+                            break;
+                        case "preset-16-9":
+                            this.setCropzoneRect(16 / 9);
+                            break;
+                        default:
+                            this.setCropzoneRect();
+                            this.ui.crop.changeApplyButtonStatus(false);
+                            break;
+                    }
                 }
             },
-            cancel: () => {
-                this.stopDrawingMode();
-                this.ui.changeMenu('crop');
-            },
-            preset: presetType => {
-                switch (presetType) {
-                    case 'preset-square':
-                        this.setCropzoneRect(1 / 1);
-                        break;
-                    case 'preset-3-2':
-                        this.setCropzoneRect(3 / 2);
-                        break;
-                    case 'preset-4-3':
-                        this.setCropzoneRect(4 / 3);
-                        break;
-                    case 'preset-5-4':
-                        this.setCropzoneRect(5 / 4);
-                        break;
-                    case 'preset-7-5':
-                        this.setCropzoneRect(7 / 5);
-                        break;
-                    case 'preset-16-9':
-                        this.setCropzoneRect(16 / 9);
-                        break;
-                    default:
-                        this.setCropzoneRect();
-                        this.ui.crop.changeApplyButtonStatus(false);
-                        break;
-                }
-            }
-        }, this._commonAction());
+            this._commonAction()
+        );
     },
 
     /**
@@ -356,9 +390,12 @@ export default {
      * @private
      */
     _flipAction() {
-        return extend({
-            flip: flipType => this[flipType]()
-        }, this._commonAction());
+        return extend(
+            {
+                flip: flipType => this[flipType]()
+            },
+            this._commonAction()
+        );
     },
 
     /**
@@ -367,15 +404,18 @@ export default {
      * @private
      */
     _filterAction() {
-        return extend({
-            applyFilter: (applying, type, options) => {
-                if (applying) {
-                    this.applyFilter(type, options);
-                } else if (this.hasFilter(type)) {
-                    this.removeFilter(type);
+        return extend(
+            {
+                applyFilter: (applying, type, options) => {
+                    if (applying) {
+                        this.applyFilter(type, options);
+                    } else if (this.hasFilter(type)) {
+                        this.removeFilter(type);
+                    }
                 }
-            }
-        }, this._commonAction());
+            },
+            this._commonAction()
+        );
     },
 
     /**
@@ -408,12 +448,14 @@ export default {
                 this.ui.changeDeleteButtonEnabled(true);
                 this.ui.changeDeleteAllButtonEnabled(true);
 
-                if (obj.type === 'cropzone') {
+                if (obj.type === "cropzone") {
                     this.ui.crop.changeApplyButtonStatus(true);
-                } else if (['rect', 'circle', 'triangle'].indexOf(obj.type) > -1) {
+                } else if (
+                    ["rect", "circle", "triangle"].indexOf(obj.type) > -1
+                ) {
                     this.stopDrawingMode();
-                    if (this.ui.submenu !== 'shape') {
-                        this.ui.changeMenu('shape', false, false);
+                    if (this.ui.submenu !== "shape") {
+                        this.ui.changeMenu("shape", false, false);
                     }
                     this.ui.shape.setShapeStatus({
                         strokeColor: obj.stroke,
@@ -421,48 +463,54 @@ export default {
                         fillColor: obj.fill
                     });
 
-                    this.ui.shape.setMaxStrokeValue(Math.min(obj.width, obj.height));
-                } else if (obj.type === 'path' || obj.type === 'line') {
-                    if (this.ui.submenu !== 'draw') {
-                        this.ui.changeMenu('draw', false, false);
+                    this.ui.shape.setMaxStrokeValue(
+                        Math.min(obj.width, obj.height)
+                    );
+                } else if (obj.type === "path" || obj.type === "line") {
+                    if (this.ui.submenu !== "draw") {
+                        this.ui.changeMenu("draw", false, false);
                         this.ui.draw.changeStandbyMode();
                     }
-                } else if (['i-text', 'text'].indexOf(obj.type) > -1) {
-                    if (this.ui.submenu !== 'text') {
-                        this.ui.changeMenu('text', false, false);
+                } else if (["i-text", "text"].indexOf(obj.type) > -1) {
+                    if (this.ui.submenu !== "text") {
+                        this.ui.changeMenu("text", false, false);
                     }
-                } else if (obj.type === 'icon') {
+                } else if (obj.type === "icon") {
                     this.stopDrawingMode();
-                    if (this.ui.submenu !== 'icon') {
-                        this.ui.changeMenu('icon', false, false);
+                    if (this.ui.submenu !== "icon") {
+                        this.ui.changeMenu("icon", false, false);
                     }
                     this.ui.icon.setIconPickerColor(obj.fill);
                 }
             },
             /* eslint-enable complexity */
             addText: pos => {
-                this.addText('Double Click', {
+                this.addText("Double Click", {
                     position: pos.originPosition,
                     styles: {
                         fill: this.ui.text.textColor,
                         fontSize: util.toInteger(this.ui.text.fontSize),
-                        fontFamily: 'Noto Sans'
+                        fontFamily: "Noto Sans"
                     }
                 }).then(() => {
-                    this.changeCursor('default');
+                    this.changeCursor("default");
                 });
             },
             addObjectAfter: obj => {
-                if (['rect', 'circle', 'triangle'].indexOf(obj.type) > -1) {
-                    this.ui.shape.setMaxStrokeValue(Math.min(obj.width, obj.height));
+                if (["rect", "circle", "triangle"].indexOf(obj.type) > -1) {
+                    this.ui.shape.setMaxStrokeValue(
+                        Math.min(obj.width, obj.height)
+                    );
                     this.ui.shape.changeStandbyMode();
                 }
             },
             objectScaled: obj => {
-                if (['i-text', 'text'].indexOf(obj.type) > -1) {
+                if (["i-text", "text"].indexOf(obj.type) > -1) {
                     this.ui.text.fontSize = util.toInteger(obj.fontSize);
-                } else if (['rect', 'circle', 'triangle'].indexOf(obj.type) >= 0) {
-                    const {width, height} = obj;
+                } else if (
+                    ["rect", "circle", "triangle"].indexOf(obj.type) >= 0
+                ) {
+                    const { width, height } = obj;
                     const strokeValue = this.ui.shape.getStrokeValue();
 
                     if (width < strokeValue) {
@@ -475,9 +523,12 @@ export default {
             },
             selectionCleared: () => {
                 this.activeObjectId = null;
-                if (this.ui.submenu === 'text') {
-                    this.changeCursor('text');
-                } else if (this.ui.submenu !== 'draw' && this.ui.submenu !== 'crop') {
+                if (this.ui.submenu === "text") {
+                    this.changeCursor("text");
+                } else if (
+                    this.ui.submenu !== "draw" &&
+                    this.ui.submenu !== "crop"
+                ) {
                     this.stopDrawingMode();
                 }
             }
@@ -493,15 +544,18 @@ export default {
         return {
             modeChange: menu => {
                 switch (menu) {
-                    case 'text':
-                        this._changeActivateMode('TEXT');
+                    case "text":
+                        this._changeActivateMode("TEXT");
                         break;
-                    case 'crop':
-                        this.startDrawingMode('CROPPER');
+                    case "crop":
+                        this.startDrawingMode("CROPPER");
                         break;
-                    case 'shape':
-                        this._changeActivateMode('SHAPE');
-                        this.setDrawingShape(this.ui.shape.type, this.ui.shape.options);
+                    case "shape":
+                        this._changeActivateMode("SHAPE");
+                        this.setDrawingShape(
+                            this.ui.shape.type,
+                            this.ui.shape.options
+                        );
                         break;
                     default:
                         break;

@@ -2,43 +2,43 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Text module
  */
-import fabric from 'fabric/dist/fabric.require';
-import snippet from 'tui-code-snippet';
-import Promise from 'core-js/library/es6/promise';
-import Component from '../interface/component';
-import consts from '../consts';
-import util from '../util';
+import fabric from "../../libs/fabric.require";
+import snippet from "../tui-code-snippet";
+import Promise from "core-js/library/es6/promise";
+import Component from "../interface/component";
+import consts from "../consts";
+import util from "../util";
 
 const events = consts.eventNames;
 
 const defaultStyles = {
-    fill: '#000000',
+    fill: "#000000",
     left: 0,
     top: 0
 };
 const resetStyles = {
-    fill: '#000000',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    textAlign: 'left',
-    textDecoraiton: ''
+    fill: "#000000",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    textAlign: "left",
+    textDecoraiton: ""
 };
-const {browser} = snippet;
+const { browser } = snippet;
 
-const TEXTAREA_CLASSNAME = 'tui-image-eidtor-textarea';
+const TEXTAREA_CLASSNAME = "tui-image-eidtor-textarea";
 const TEXTAREA_STYLES = util.makeStyleText({
-    position: 'absolute',
+    position: "absolute",
     padding: 0,
-    display: 'none',
-    border: '1px dotted red',
-    overflow: 'hidden',
-    resize: 'none',
-    outline: 'none',
-    'border-radius': 0,
-    'background-color': 'transparent',
-    '-webkit-appearance': 'none',
-    'z-index': 9999,
-    'white-space': 'pre'
+    display: "none",
+    border: "1px dotted red",
+    overflow: "hidden",
+    resize: "none",
+    outline: "none",
+    "border-radius": 0,
+    "background-color": "transparent",
+    "-webkit-appearance": "none",
+    "z-index": 9999,
+    "white-space": "pre"
 });
 const EXTRA_PIXEL_LINEHEIGHT = 0.1;
 const DBCLICK_TIME = 500;
@@ -105,7 +105,7 @@ class Text extends Component {
          * Last click time
          * @type {Date}
          */
-        this._lastClickTime = (new Date()).getTime();
+        this._lastClickTime = new Date().getTime();
 
         /**
          * Text object infos before editing
@@ -133,23 +133,23 @@ class Text extends Component {
         const canvas = this.getCanvas();
 
         canvas.selection = false;
-        canvas.defaultCursor = 'text';
+        canvas.defaultCursor = "text";
         canvas.on({
-            'mouse:down': this._listeners.mousedown,
-            'object:selected': this._listeners.select,
-            'before:selection:cleared': this._listeners.selectClear,
-            'object:scaling': this._listeners.scaling,
-            'text:editing': this._listeners.modify
+            "mouse:down": this._listeners.mousedown,
+            "object:selected": this._listeners.select,
+            "before:selection:cleared": this._listeners.selectClear,
+            "object:scaling": this._listeners.scaling,
+            "text:editing": this._listeners.modify
         });
 
         if (this.useItext) {
             canvas.forEachObject(obj => {
-                if (obj.type === 'i-text') {
+                if (obj.type === "i-text") {
                     obj.set({
-                        left: obj.left - (obj.width / 2),
-                        top: obj.top - (obj.height / 2),
-                        originX: 'left',
-                        originY: 'top'
+                        left: obj.left - obj.width / 2,
+                        top: obj.top - obj.height / 2,
+                        originX: "left",
+                        originY: "top"
                     });
                 }
             });
@@ -167,19 +167,19 @@ class Text extends Component {
         const canvas = this.getCanvas();
 
         canvas.selection = true;
-        canvas.defaultCursor = 'default';
+        canvas.defaultCursor = "default";
 
         if (this.useItext) {
             canvas.forEachObject(obj => {
-                if (obj.type === 'i-text') {
-                    if (obj.text === '') {
+                if (obj.type === "i-text") {
+                    if (obj.text === "") {
                         obj.remove();
                     } else {
                         obj.set({
-                            left: obj.left + (obj.width / 2),
-                            top: obj.top + (obj.height / 2),
-                            originX: 'center',
-                            originY: 'center'
+                            left: obj.left + obj.width / 2,
+                            top: obj.top + obj.height / 2,
+                            originX: "center",
+                            originY: "center"
                         });
                     }
                 }
@@ -190,11 +190,11 @@ class Text extends Component {
         }
 
         canvas.off({
-            'mouse:down': this._listeners.mousedown,
-            'object:selected': this._listeners.select,
-            'before:selection:cleared': this._listeners.selectClear,
-            'object:scaling': this._listeners.scaling,
-            'text:editing': this._listeners.modify
+            "mouse:down": this._listeners.mousedown,
+            "object:selected": this._listeners.select,
+            "before:selection:cleared": this._listeners.selectClear,
+            "object:scaling": this._listeners.scaling,
+            "text:editing": this._listeners.modify
         });
     }
 
@@ -229,8 +229,8 @@ class Text extends Component {
             if (this.useItext) {
                 newText = new fabric.IText(text, styles);
                 selectionStyle = snippet.extend({}, selectionStyle, {
-                    originX: 'left',
-                    originY: 'top'
+                    originX: "left",
+                    originY: "top"
                 });
             } else {
                 newText = new fabric.Text(text, styles);
@@ -260,7 +260,7 @@ class Text extends Component {
      */
     change(activeObj, text) {
         return new Promise(resolve => {
-            activeObj.set('text', text);
+            activeObj.set("text", text);
 
             this.getCanvas().renderAll();
             resolve();
@@ -282,11 +282,15 @@ class Text extends Component {
      */
     setStyle(activeObj, styleObj) {
         return new Promise(resolve => {
-            snippet.forEach(styleObj, (val, key) => {
-                if (activeObj[key] === val) {
-                    styleObj[key] = resetStyles[key] || '';
-                }
-            }, this);
+            snippet.forEach(
+                styleObj,
+                (val, key) => {
+                    if (activeObj[key] === val) {
+                        styleObj[key] = resetStyles[key] || "";
+                    }
+                },
+                this
+            );
 
             activeObj.set(styleObj);
 
@@ -368,11 +372,11 @@ class Text extends Component {
      */
     _createTextarea() {
         const container = this.getCanvasElement().parentNode;
-        const textarea = document.createElement('textarea');
+        const textarea = document.createElement("textarea");
 
         textarea.className = TEXTAREA_CLASSNAME;
-        textarea.setAttribute('style', TEXTAREA_STYLES);
-        textarea.setAttribute('wrap', 'off');
+        textarea.setAttribute("style", TEXTAREA_STYLES);
+        textarea.setAttribute("wrap", "off");
 
         container.appendChild(textarea);
 
@@ -386,12 +390,16 @@ class Text extends Component {
         });
 
         if (browser.msie && browser.version === 9) {
-            fabric.util.addListener(textarea, 'keydown', this._listeners.keydown);
+            fabric.util.addListener(
+                textarea,
+                "keydown",
+                this._listeners.keydown
+            );
         } else {
-            fabric.util.addListener(textarea, 'input', this._listeners.input);
+            fabric.util.addListener(textarea, "input", this._listeners.input);
         }
-        fabric.util.addListener(textarea, 'blur', this._listeners.blur);
-        fabric.util.addListener(textarea, 'scroll', this._listeners.scroll);
+        fabric.util.addListener(textarea, "blur", this._listeners.blur);
+        fabric.util.addListener(textarea, "scroll", this._listeners.scroll);
     }
 
     /**
@@ -400,19 +408,27 @@ class Text extends Component {
      */
     _removeTextarea() {
         const container = this.getCanvasElement().parentNode;
-        const textarea = container.querySelector('textarea');
+        const textarea = container.querySelector("textarea");
 
         container.removeChild(textarea);
 
         this._textarea = null;
 
         if (browser.msie && browser.version < 10) {
-            fabric.util.removeListener(textarea, 'keydown', this._listeners.keydown);
+            fabric.util.removeListener(
+                textarea,
+                "keydown",
+                this._listeners.keydown
+            );
         } else {
-            fabric.util.removeListener(textarea, 'input', this._listeners.input);
+            fabric.util.removeListener(
+                textarea,
+                "input",
+                this._listeners.input
+            );
         }
-        fabric.util.removeListener(textarea, 'blur', this._listeners.blur);
-        fabric.util.removeListener(textarea, 'scroll', this._listeners.scroll);
+        fabric.util.removeListener(textarea, "blur", this._listeners.blur);
+        fabric.util.removeListener(textarea, "scroll", this._listeners.scroll);
     }
 
     /**
@@ -454,15 +470,17 @@ class Text extends Component {
         const editingObj = this._editingObj;
         const editingObjInfos = this._editingObjInfos;
         const textContent = this._textarea.value;
-        let transWidth = (editingObj.getWidth() / ratio) - (editingObjInfos.width / ratio);
-        let transHeight = (editingObj.getHeight() / ratio) - (editingObjInfos.height / ratio);
+        let transWidth =
+            editingObj.getWidth() / ratio - editingObjInfos.width / ratio;
+        let transHeight =
+            editingObj.getHeight() / ratio - editingObjInfos.height / ratio;
 
         if (ratio === 1) {
             transWidth /= 2;
             transHeight /= 2;
         }
 
-        this._textarea.style.display = 'none';
+        this._textarea.style.display = "none";
 
         editingObj.set({
             left: editingObjInfos.left + transWidth,
@@ -519,7 +537,7 @@ class Text extends Component {
 
         if (obj) {
             // obj is empty object at initial time, will be set fabric object
-            if (obj.text === '') {
+            if (obj.text === "") {
                 obj.remove();
             }
         }
@@ -544,7 +562,7 @@ class Text extends Component {
     _onFabricMouseDown(fEvent) {
         const obj = fEvent.target;
 
-        if (obj && !obj.isType('text')) {
+        if (obj && !obj.isType("text")) {
             return;
         }
 
@@ -587,7 +605,7 @@ class Text extends Component {
      * @private
      */
     _onFabricMouseUp(fEvent) {
-        const newClickTime = (new Date()).getTime();
+        const newClickTime = new Date().getTime();
 
         if (this._isDoubleClick(newClickTime)) {
             if (!this.useItext) {
@@ -606,7 +624,7 @@ class Text extends Component {
      * @private
      */
     _isDoubleClick(newClickTime) {
-        return (newClickTime - this._lastClickTime < DBCLICK_TIME);
+        return newClickTime - this._lastClickTime < DBCLICK_TIME;
     }
 
     /**
@@ -632,7 +650,7 @@ class Text extends Component {
             height: this._editingObj.getHeight()
         };
 
-        textareaStyle.display = 'block';
+        textareaStyle.display = "block";
         textareaStyle.left = `${obj.oCoords.tl.x / ratio}px`;
         textareaStyle.top = `${obj.oCoords.tl.y / ratio}px`;
         textareaStyle.width = `${Math.ceil(obj.getWidth() / ratio)}px`;
@@ -640,16 +658,17 @@ class Text extends Component {
         textareaStyle.transform = `rotate(${obj.getAngle()}deg)`;
         textareaStyle.color = obj.getFill();
 
-        textareaStyle['font-size'] = `${obj.getFontSize() / ratio}px`;
-        textareaStyle['font-family'] = obj.getFontFamily();
-        textareaStyle['font-style'] = obj.getFontStyle();
-        textareaStyle['font-weight'] = obj.getFontWeight();
-        textareaStyle['text-align'] = obj.getTextAlign();
-        textareaStyle['line-height'] = obj.getLineHeight() + EXTRA_PIXEL_LINEHEIGHT;
-        textareaStyle['transform-origin'] = 'left top';
+        textareaStyle["font-size"] = `${obj.getFontSize() / ratio}px`;
+        textareaStyle["font-family"] = obj.getFontFamily();
+        textareaStyle["font-style"] = obj.getFontStyle();
+        textareaStyle["font-weight"] = obj.getFontWeight();
+        textareaStyle["text-align"] = obj.getTextAlign();
+        textareaStyle["line-height"] =
+            obj.getLineHeight() + EXTRA_PIXEL_LINEHEIGHT;
+        textareaStyle["transform-origin"] = "left top";
 
         this._textarea.focus();
     }
 }
 
-module.exports = Text;
+export default Text;

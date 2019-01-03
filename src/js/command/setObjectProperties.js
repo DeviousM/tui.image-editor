@@ -2,12 +2,12 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Set object properties
  */
-import snippet from 'tui-code-snippet';
-import commandFactory from '../factory/command';
-import Promise from 'core-js/library/es6/promise';
-import consts from '../consts';
+import snippet from "../tui-code-snippet";
+import commandFactory from "../factory/command";
+import Promise from "core-js/library/es6/promise";
+import consts from "../consts";
 
-const {commandNames, rejectMessages} = consts;
+const { commandNames, rejectMessages } = consts;
 
 const command = {
     name: commandNames.SET_OBJECT_PROPERTIES,
@@ -48,7 +48,7 @@ const command = {
      * @returns {Promise}
      */
     undo(graphics, id) {
-        const {props} = this.undoData;
+        const { props } = this.undoData;
 
         graphics.setObjectProperties(id, props);
 
@@ -58,4 +58,4 @@ const command = {
 
 commandFactory.register(command);
 
-module.exports = command;
+export default command;

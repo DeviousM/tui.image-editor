@@ -2,13 +2,13 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Change text styles
  */
-import snippet from 'tui-code-snippet';
-import commandFactory from '../factory/command';
-import Promise from 'core-js/library/es6/promise';
-import consts from '../consts';
+import snippet from "../tui-code-snippet";
+import commandFactory from "../factory/command";
+import Promise from "core-js/library/es6/promise";
+import consts from "../consts";
 
-const {componentNames, rejectMessages, commandNames} = consts;
-const {TEXT} = componentNames;
+const { componentNames, rejectMessages, commandNames } = consts;
+const { TEXT } = componentNames;
 
 const command = {
     name: commandNames.CHANGE_TEXT_STYLE,
@@ -49,7 +49,7 @@ const command = {
      */
     undo(graphics) {
         const textComp = graphics.getComponent(TEXT);
-        const {object: textObj, styles} = this.undoData;
+        const { object: textObj, styles } = this.undoData;
 
         return textComp.setStyle(textObj, styles);
     }
@@ -57,4 +57,4 @@ const command = {
 
 commandFactory.register(command);
 
-module.exports = command;
+export default command;

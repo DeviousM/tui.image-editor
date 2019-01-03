@@ -2,13 +2,13 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview change a shape
  */
-import snippet from 'tui-code-snippet';
-import commandFactory from '../factory/command';
-import Promise from 'core-js/library/es6/promise';
-import consts from '../consts';
+import snippet from "../tui-code-snippet";
+import commandFactory from "../factory/command";
+import Promise from "core-js/library/es6/promise";
+import consts from "../consts";
 
-const {componentNames, rejectMessages, commandNames} = consts;
-const {SHAPE} = componentNames;
+const { componentNames, rejectMessages, commandNames } = consts;
+const { SHAPE } = componentNames;
 
 const command = {
     name: commandNames.CHANGE_SHAPE,
@@ -52,7 +52,7 @@ const command = {
      */
     undo(graphics) {
         const shapeComp = graphics.getComponent(SHAPE);
-        const {object: shape, options} = this.undoData;
+        const { object: shape, options } = this.undoData;
 
         return shapeComp.change(shape, options);
     }
@@ -60,4 +60,4 @@ const command = {
 
 commandFactory.register(command);
 
-module.exports = command;
+export default command;

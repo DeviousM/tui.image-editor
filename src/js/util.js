@@ -2,12 +2,10 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Util
  */
-import {forEach, sendHostname} from 'tui-code-snippet';
-const {min, max} = Math;
-let hostnameSent = false;
+const { min, max } = Math;
+import { forEach } from "./tui-code-snippet";
 
-module.exports = {
-
+export default {
     /**
      * Clamp value
      * @param {number} value - Value
@@ -27,26 +25,12 @@ module.exports = {
     },
 
     /**
-     * Make key-value object from arguments
-     * @returns {object.<string, string>}
-     */
-    keyMirror(...args) {
-        const obj = {};
-
-        forEach(args, key => {
-            obj[key] = key;
-        });
-
-        return obj;
-    },
-
-    /**
      * Make CSSText
      * @param {Object} styleObj - Style info object
      * @returns {string} Connected string of style
      */
     makeStyleText(styleObj) {
-        let styleStr = '';
+        let styleStr = "";
 
         forEach(styleObj, (value, prop) => {
             styleStr += `${prop}: ${value};`;
@@ -63,7 +47,7 @@ module.exports = {
      */
     getProperties(obj, keys) {
         const props = {};
-        const {length} = keys;
+        const { length } = keys;
         let i = 0;
         let key;
 
@@ -125,12 +109,7 @@ module.exports = {
      * send hostname
      */
     sendHostName() {
-        if (hostnameSent) {
-            return;
-        }
-        hostnameSent = true;
-
-        sendHostname('image-editor', 'UA-129999381-1');
+        return;
     },
 
     /**
@@ -139,16 +118,19 @@ module.exports = {
      * @param {string} tagId - style tag id
      */
     styleLoad(styleBuffer, tagId) {
-        const [head] = document.getElementsByTagName('head');
-        const linkElement = document.createElement('link');
+        const [head] = document.getElementsByTagName("head");
+        const linkElement = document.createElement("link");
         const styleData = encodeURIComponent(styleBuffer);
         if (tagId) {
             linkElement.id = tagId;
             // linkElement.id = 'tui-image-editor-theme-style';
         }
-        linkElement.setAttribute('rel', 'stylesheet');
-        linkElement.setAttribute('type', 'text/css');
-        linkElement.setAttribute('href', `data:text/css;charset=UTF-8,${styleData}`);
+        linkElement.setAttribute("rel", "stylesheet");
+        linkElement.setAttribute("type", "text/css");
+        linkElement.setAttribute(
+            "href",
+            `data:text/css;charset=UTF-8,${styleData}`
+        );
         head.appendChild(linkElement);
     },
 
@@ -168,13 +150,13 @@ module.exports = {
      */
     base64ToBlob(data) {
         const rImageType = /data:(image\/.+);base64,/;
-        let mimeString = '';
+        let mimeString = "";
         let raw, uInt8Array, i;
 
         raw = data.replace(rImageType, (header, imageType) => {
             mimeString = imageType;
 
-            return '';
+            return "";
         });
 
         raw = atob(raw);
@@ -185,6 +167,6 @@ module.exports = {
             uInt8Array[i] = raw.charCodeAt(i);
         }
 
-        return new Blob([uInt8Array], {type: mimeString});
+        return new Blob([uInt8Array], { type: mimeString });
     }
 };

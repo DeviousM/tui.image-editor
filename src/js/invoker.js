@@ -2,13 +2,13 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Invoker - invoke commands
  */
-import snippet from 'tui-code-snippet';
-import Promise from 'core-js/library/es6/promise';
-import commandFactory from './factory/command';
-import consts from './consts';
+import snippet from "./tui-code-snippet";
+import Promise from "core-js/library/es6/promise";
+import commandFactory from "./factory/command";
+import consts from "./consts";
 
-const {eventNames, rejectMessages} = consts;
-const {isFunction, isString, CustomEvents} = snippet;
+const { eventNames, rejectMessages } = consts;
+const { isFunction, isString, CustomEvents } = snippet;
 
 /**
  * Invoker
@@ -48,12 +48,13 @@ class Invoker {
     _invokeExecution(command) {
         this.lock();
 
-        let {args} = command;
+        let { args } = command;
         if (!args) {
             args = [];
         }
 
-        return command.execute(...args)
+        return command
+            .execute(...args)
             .then(value => {
                 this.pushUndoStack(command);
                 this.unlock();
@@ -62,7 +63,8 @@ class Invoker {
                 }
 
                 return value;
-            })['catch'](message => {
+            })
+            ["catch"](message => {
                 this.unlock();
 
                 return Promise.reject(message);
@@ -78,12 +80,13 @@ class Invoker {
     _invokeUndo(command) {
         this.lock();
 
-        let {args} = command;
+        let { args } = command;
         if (!args) {
             args = [];
         }
 
-        return command.undo(...args)
+        return command
+            .undo(...args)
             .then(value => {
                 this.pushRedoStack(command);
                 this.unlock();
@@ -92,7 +95,8 @@ class Invoker {
                 }
 
                 return value;
-            })['catch'](message => {
+            })
+            ["catch"](message => {
                 this.unlock();
 
                 return Promise.reject(message);
@@ -147,12 +151,11 @@ class Invoker {
             command = commandFactory.create(...args);
         }
 
-        return this._invokeExecution(command)
-            .then(value => {
-                this.clearRedoStack();
+        return this._invokeExecution(command).then(value => {
+            this.clearRedoStack();
 
-                return value;
-            });
+            return value;
+        });
     }
 
     /**
@@ -162,7 +165,7 @@ class Invoker {
     undo() {
         let command = this._undoStack.pop();
         let promise;
-        let message = '';
+        let message = "";
 
         if (command && this._isLocked) {
             this.pushUndoStack(command, true);
@@ -191,7 +194,7 @@ class Invoker {
     redo() {
         let command = this._redoStack.pop();
         let promise;
-        let message = '';
+        let message = "";
 
         if (command && this._isLocked) {
             this.pushRedoStack(command, true);
@@ -275,4 +278,4 @@ class Invoker {
 }
 
 CustomEvents.mixin(Invoker);
-module.exports = Invoker;
+export default Invoker;
