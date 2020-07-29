@@ -2,14 +2,14 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Image loader
  */
-import Promise from 'core-js/library/es6/promise';
-import Component from '../interface/component';
-import consts from '../consts';
+import Promise from "core-js/library/es6/promise";
+import Component from "../interface/component";
+import consts from "../consts";
 
-const {componentNames, rejectMessages} = consts;
+const { componentNames, rejectMessages } = consts;
 const imageOption = {
     padding: 0,
-    crossOrigin: 'Anonymous'
+    crossOrigin: "Anonymous",
 };
 
 /**
@@ -30,21 +30,22 @@ class ImageLoader extends Component {
      * @param {?(fabric.Image|string)} img - fabric.Image instance or URL of an image
      * @returns {jQuery.Deferred} deferred
      */
-    load(imageName, img) {
+    load(imageName, img, cors) {
         let promise;
 
-        if (!imageName && !img) { // Back to the initial state, not error.
+        if (!imageName && !img) {
+            // Back to the initial state, not error.
             const canvas = this.getCanvas();
 
             canvas.backgroundImage = null;
             canvas.renderAll();
 
-            promise = new Promise(resolve => {
-                this.setCanvasImage('', null);
+            promise = new Promise((resolve) => {
+                this.setCanvasImage("", null);
                 resolve();
             });
         } else {
-            promise = this._setBackgroundImage(img).then(oImage => {
+            promise = this._setBackgroundImage(img, cors).then((oImage) => {
                 this.setCanvasImage(imageName, oImage);
                 this.adjustCanvasDimension();
 
@@ -61,7 +62,7 @@ class ImageLoader extends Component {
      * @returns {$.Deferred} deferred
      * @private
      */
-    _setBackgroundImage(img) {
+    _setBackgroundImage(img, cors) {
         if (!img) {
             return Promise.reject(rejectMessages.loadImage);
         }
@@ -69,15 +70,22 @@ class ImageLoader extends Component {
         return new Promise((resolve, reject) => {
             const canvas = this.getCanvas();
 
-            canvas.setBackgroundImage(img, () => {
-                const oImage = canvas.backgroundImage;
+            canvas.setBackgroundImage(
+                img,
+                () => {
+                    const oImage = canvas.backgroundImage;
 
-                if (oImage.getElement()) {
-                    resolve(oImage);
-                } else {
-                    reject(rejectMessages.loadingImageFailed);
+                    if (oImage.getElement()) {
+                        resolve(oImage);
+                    } else {
+                        reject(rejectMessages.loadingImageFailed);
+                    }
+                },
+                {
+                    padding: 0,
+                    crossOrigin: cors ? "use-credentials" : "anonymous",
                 }
-            }, imageOption);
+            );
         });
     }
 }

@@ -2,35 +2,27 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Graphics module
  */
-import snippet from "./tui-code-snippet";
-import Promise from "core-js/library/es6/promise";
-import fabric from "../libs/fabric.require";
-import ImageLoader from "./component/imageLoader";
-import Cropper from "./component/cropper";
-import Flip from "./component/flip";
-import Rotation from "./component/rotation";
-import Text from "./component/text";
-import Icon from "./component/icon";
-import Shape from "./component/shape";
-import CropperDrawingMode from "./drawingMode/cropper";
-import ShapeDrawingMode from "./drawingMode/shape";
-import TextDrawingMode from "./drawingMode/text";
-import consts from "./consts";
-import util from "./util";
+import snippet from './tui-code-snippet';
+import Promise from 'core-js/library/es6/promise';
+import fabric from '../libs/fabric.require';
+import ImageLoader from './component/imageLoader';
+import Cropper from './component/cropper';
+import Flip from './component/flip';
+import Rotation from './component/rotation';
+import Text from './component/text';
+import Icon from './component/icon';
+import Shape from './component/shape';
+import CropperDrawingMode from './drawingMode/cropper';
+import ShapeDrawingMode from './drawingMode/shape';
+import TextDrawingMode from './drawingMode/text';
+import consts from './consts';
+import util from './util';
 
 const components = consts.componentNames;
 const events = consts.eventNames;
 
-const { drawingModes, fObjectOptions } = consts;
-const {
-    extend,
-    stamp,
-    isArray,
-    isString,
-    forEachArray,
-    forEachOwnProperties,
-    CustomEvents
-} = snippet;
+const {drawingModes, fObjectOptions} = consts;
+const {extend, stamp, isArray, isString, forEachArray, forEachOwnProperties, CustomEvents} = snippet;
 
 const DEFAULT_CSS_MAX_WIDTH = 1000;
 const DEFAULT_CSS_MAX_HEIGHT = 800;
@@ -54,15 +46,7 @@ const backstoreOnly = {
  * @ignore
  */
 class Graphics {
-    constructor(
-        element,
-        {
-            cssMaxWidth,
-            cssMaxHeight,
-            useItext = false,
-            useDragAddIcon = false
-        } = {}
-    ) {
+    constructor(element, {cssMaxWidth, cssMaxHeight, useItext = true, useDragAddIcon = true} = {}) {
         /**
          * Fabric image instance
          * @type {fabric.Image}
@@ -103,7 +87,7 @@ class Graphics {
          * Image name
          * @type {string}
          */
-        this.imageName = "";
+        this.imageName = '';
 
         /**
          * Object Map
@@ -167,7 +151,7 @@ class Graphics {
      * Destroy canvas element
      */
     destroy() {
-        const { wrapperEl } = this._canvas;
+        const {wrapperEl} = this._canvas;
 
         this._canvas.clear();
 
@@ -269,8 +253,7 @@ class Graphics {
         const objects = [];
         const canvas = this._canvas;
         const target = this.getObject(id);
-        const isValidGroup =
-            target && target.isType("group") && !target.isEmpty();
+        const isValidGroup = target && target.isType('group') && !target.isEmpty();
 
         if (isValidGroup) {
             canvas.discardActiveGroup(); // restore states for each objects
@@ -387,9 +370,7 @@ class Graphics {
             return;
         }
 
-        const drawingModeInstance = this._getDrawingModeInstance(
-            this.getDrawingMode()
-        );
+        const drawingModeInstance = this._getDrawingModeInstance(this.getDrawingMode());
         if (drawingModeInstance && drawingModeInstance.end) {
             drawingModeInstance.end(this);
         }
@@ -439,14 +420,14 @@ class Graphics {
      */
     adjustCanvasDimension() {
         const canvasImage = this.canvasImage.scale(1);
-        const { width, height } = canvasImage.getBoundingRect();
+        const {width, height} = canvasImage.getBoundingRect();
         const maxDimension = this._calcMaxDimension(width, height);
 
         this.setCanvasCssDimension({
-            width: "100%",
-            height: "100%", // Set height '' for IE9
-            "max-width": `${maxDimension.width}px`,
-            "max-height": `${maxDimension.height}px`
+            width: '100%',
+            height: '100%', // Set height '' for IE9
+            'max-width': `${maxDimension.width}px`,
+            'max-height': `${maxDimension.height}px`
         });
 
         this.setCanvasBackstoreDimension({
@@ -481,7 +462,7 @@ class Graphics {
      * @param {boolean} [withRendering] - If true, The changed image will be reflected in the canvas
      */
     setImageProperties(setting, withRendering) {
-        const { canvasImage } = this;
+        const {canvasImage} = this;
 
         if (!canvasImage) {
             return;
@@ -542,7 +523,7 @@ class Graphics {
                     resolve(this.createObjectProperties(image));
                 },
                 {
-                    crossOrigin: "Anonymous"
+                    crossOrigin: 'Anonymous'
                 }
             );
         });
@@ -583,9 +564,7 @@ class Graphics {
      * @returns {?{imageName: string, url: string}} cropped Image data
      */
     getCroppedImageData(cropRect) {
-        return this.getComponent(components.CROPPER).getCroppedImageData(
-            cropRect
-        );
+        return this.getComponent(components.CROPPER).getCroppedImageData(cropRect);
     }
 
     /**
@@ -738,13 +717,13 @@ class Graphics {
      */
     setObjectPosition(id, posInfo) {
         const targetObj = this.getObject(id);
-        const { x, y, originX, originY } = posInfo;
+        const {x, y, originX, originY} = posInfo;
         if (!targetObj) {
             return false;
         }
 
         const targetOrigin = targetObj.getPointByOrigin(originX, originY);
-        const centerOrigin = targetObj.getPointByOrigin("center", "center");
+        const centerOrigin = targetObj.getPointByOrigin('center', 'center');
         const diffX = centerOrigin.x - targetOrigin.x;
         const diffY = centerOrigin.y - targetOrigin.y;
 
@@ -798,13 +777,13 @@ class Graphics {
             selectedElement = document.querySelector(element);
         }
 
-        if (selectedElement.nodeName.toUpperCase() !== "CANVAS") {
-            canvasElement = document.createElement("canvas");
+        if (selectedElement.nodeName.toUpperCase() !== 'CANVAS') {
+            canvasElement = document.createElement('canvas');
             selectedElement.appendChild(canvasElement);
         }
 
         this._canvas = new fabric.Canvas(canvasElement, {
-            containerClass: "tui-image-editor-canvas-container",
+            containerClass: 'tui-image-editor-canvas-container',
             enableRetinaScaling: false
         });
     }
@@ -893,7 +872,7 @@ class Graphics {
         obj.set({
             left: centerPos.x,
             top: centerPos.y,
-            crossOrigin: "Anonymous"
+            crossOrigin: 'Anonymous'
         });
 
         this.getCanvas()
@@ -908,15 +887,15 @@ class Graphics {
         const canvas = this._canvas;
         const handler = this._handler;
         canvas.on({
-            "mouse:down": handler.onMouseDown,
-            "object:added": handler.onObjectAdded,
-            "object:removed": handler.onObjectRemoved,
-            "object:moving": handler.onObjectMoved,
-            "object:scaling": handler.onObjectScaled,
-            "object:selected": handler.onObjectSelected,
-            "path:created": handler.onPathCreated,
-            "selection:cleared": handler.onSelectionCleared,
-            "selection:created": handler.onSelectionCreated
+            'mouse:down': handler.onMouseDown,
+            'object:added': handler.onObjectAdded,
+            'object:removed': handler.onObjectRemoved,
+            'object:moving': handler.onObjectMoved,
+            'object:scaling': handler.onObjectScaled,
+            'object:selected': handler.onObjectSelected,
+            'path:created': handler.onPathCreated,
+            'selection:cleared': handler.onSelectionCleared,
+            'selection:created': handler.onSelectionCreated
         });
     }
 
@@ -937,7 +916,7 @@ class Graphics {
      */
     _onObjectAdded(fEvent) {
         const obj = fEvent.target;
-        if (obj.isType("cropzone")) {
+        if (obj.isType('cropzone')) {
             return;
         }
 
@@ -961,7 +940,7 @@ class Graphics {
      * @private
      */
     _onObjectMoved(fEvent) {
-        const { target } = fEvent;
+        const {target} = fEvent;
         const params = this.createObjectProperties(target);
 
         this.fire(events.OBJECT_MOVED, params);
@@ -973,7 +952,7 @@ class Graphics {
      * @private
      */
     _onObjectScaled(fEvent) {
-        const { target } = fEvent;
+        const {target} = fEvent;
         const params = this.createObjectProperties(target);
 
         this.fire(events.OBJECT_SCALED, params);
@@ -985,7 +964,7 @@ class Graphics {
      * @private
      */
     _onObjectSelected(fEvent) {
-        const { target } = fEvent;
+        const {target} = fEvent;
         const params = this.createObjectProperties(target);
 
         this.fire(events.OBJECT_ACTIVATED, params);
@@ -1037,7 +1016,7 @@ class Graphics {
     changeSelectableAll(selectable) {
         this._canvas.forEachObject(obj => {
             obj.selectable = selectable;
-            obj.hoverCursor = selectable ? "move" : "crosshair";
+            obj.hoverCursor = selectable ? 'move' : 'crosshair';
         });
     }
 
@@ -1047,16 +1026,7 @@ class Graphics {
      * @returns {Object} properties object
      */
     createObjectProperties(obj) {
-        const predefinedKeys = [
-            "left",
-            "top",
-            "width",
-            "height",
-            "fill",
-            "stroke",
-            "strokeWidth",
-            "opacity"
-        ];
+        const predefinedKeys = ['left', 'top', 'width', 'height', 'fill', 'stroke', 'strokeWidth', 'opacity'];
         const props = {
             id: stamp(obj),
             type: obj.type
@@ -1064,7 +1034,7 @@ class Graphics {
 
         extend(props, util.getProperties(obj, predefinedKeys));
 
-        if (["i-text", "text"].indexOf(obj.type) > -1) {
+        if (['i-text', 'text'].indexOf(obj.type) > -1) {
             extend(props, this._createTextProperties(obj, props));
         }
 
@@ -1078,14 +1048,7 @@ class Graphics {
      * @returns {Object} properties object
      */
     _createTextProperties(obj) {
-        const predefinedKeys = [
-            "text",
-            "fontFamily",
-            "fontSize",
-            "fontStyle",
-            "textAlign",
-            "textDecoration"
-        ];
+        const predefinedKeys = ['text', 'fontFamily', 'fontSize', 'fontStyle', 'textAlign', 'textDecoration'];
         const props = {};
         extend(props, util.getProperties(obj, predefinedKeys));
 

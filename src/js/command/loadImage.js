@@ -2,11 +2,11 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Load a background (main) image
  */
-import commandFactory from '../factory/command';
-import consts from '../consts';
+import commandFactory from "../factory/command";
+import consts from "../consts";
 
-const {componentNames, commandNames} = consts;
-const {IMAGE_LOADER} = componentNames;
+const { componentNames, commandNames } = consts;
+const { IMAGE_LOADER } = componentNames;
 
 const command = {
     name: commandNames.LOAD_IMAGE,
@@ -18,28 +18,30 @@ const command = {
      * @param {string} imgUrl - Image Url
      * @returns {Promise}
      */
-    execute(graphics, imageName, imgUrl) {
+    execute(graphics, imageName, imgUrl, cors) {
         const loader = graphics.getComponent(IMAGE_LOADER);
         const prevImage = loader.getCanvasImage();
         const prevImageWidth = prevImage ? prevImage.width : 0;
         const prevImageHeight = prevImage ? prevImage.height : 0;
-        const objects = graphics.removeAll(true).filter(objectItem => objectItem.type !== 'cropzone');
+        const objects = graphics
+            .removeAll(true)
+            .filter((objectItem) => objectItem.type !== "cropzone");
 
-        objects.forEach(objectItem => {
+        objects.forEach((objectItem) => {
             objectItem.evented = true;
         });
 
         this.undoData = {
             name: loader.getImageName(),
             image: prevImage,
-            objects
+            objects,
         };
 
-        return loader.load(imageName, imgUrl).then(newImage => ({
+        return loader.load(imageName, imgUrl, cors).then((newImage) => ({
             oldWidth: prevImageWidth,
             oldHeight: prevImageHeight,
             newWidth: newImage.width,
-            newHeight: newImage.height
+            newHeight: newImage.height,
         }));
     },
 
@@ -49,13 +51,13 @@ const command = {
      */
     undo(graphics) {
         const loader = graphics.getComponent(IMAGE_LOADER);
-        const {objects, name, image} = this.undoData;
+        const { objects, name, image } = this.undoData;
 
         graphics.removeAll(true);
         graphics.add(objects);
 
         return loader.load(name, image);
-    }
+    },
 };
 
 commandFactory.register(command);

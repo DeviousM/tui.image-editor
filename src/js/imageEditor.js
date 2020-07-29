@@ -5,7 +5,7 @@
 import snippet from "./tui-code-snippet";
 import Promise from "core-js/library/es6/promise";
 import Invoker from "./invoker";
-import action from "./action";
+// import action from "./action";
 import commandFactory from "./factory/command";
 import Graphics from "./graphics";
 import consts from "./consts";
@@ -59,7 +59,7 @@ class ImageEditor {
         options = snippet.extend(
             {
                 includeUI: false,
-                usageStatistics: true
+                usageStatistics: true,
             },
             options
         );
@@ -80,15 +80,12 @@ class ImageEditor {
          * @type {Graphics}
          * @private
          */
-        this._graphics = new Graphics(
-            this.ui ? this.ui.getEditorArea() : wrapper,
-            {
-                cssMaxWidth: options.cssMaxWidth,
-                cssMaxHeight: options.cssMaxHeight,
-                useItext: true,
-                useDragAddIcon: !!this.ui
-            }
-        );
+        this._graphics = new Graphics(wrapper, {
+            cssMaxWidth: options.cssMaxWidth,
+            cssMaxHeight: options.cssMaxHeight,
+            useItext: true,
+            useDragAddIcon: true,
+        });
 
         /**
          * Event handler list
@@ -110,7 +107,7 @@ class ImageEditor {
             iconCreateResize: this._onIconCreateResize.bind(this),
             iconCreateEnd: this._onIconCreateEnd.bind(this),
             selectionCleared: this._selectionCleared.bind(this),
-            selectionCreated: this._selectionCreated.bind(this)
+            selectionCreated: this._selectionCreated.bind(this),
         };
 
         this._attachInvokerEvents();
@@ -118,13 +115,13 @@ class ImageEditor {
         this._attachDomEvents();
         this._setSelectionStyle(options.selectionStyle, {
             applyCropSelectionStyle: options.applyCropSelectionStyle,
-            applyGroupSelectionStyle: options.applyGroupSelectionStyle
+            applyGroupSelectionStyle: options.applyGroupSelectionStyle,
         });
 
-        if (this.ui) {
-            this.ui.initCanvas();
-            this.setReAction();
-        }
+        // if (this.ui) {
+        //     this.ui.initCanvas();
+        //     this.setReAction();
+        // }
     }
 
     /**
@@ -201,7 +198,7 @@ class ImageEditor {
         }
 
         if (applyGroupSelectionStyle) {
-            this.on("selectionCreated", eventTarget => {
+            this.on("selectionCreated", (eventTarget) => {
                 if (eventTarget.type === "group") {
                     eventTarget.set(selectionStyle);
                 }
@@ -262,7 +259,7 @@ class ImageEditor {
             iconCreateEnd: this._handlers.iconCreateEnd,
             selectionCleared: this._handlers.selectionCleared,
             selectionCreated: this._handlers.selectionCreated,
-            addObjectAfter: this._handlers.addObjectAfter
+            addObjectAfter: this._handlers.addObjectAfter,
         });
     }
 
@@ -348,9 +345,9 @@ class ImageEditor {
 
         const targetObject = targetObjects.pop();
 
-        return this.removeObject(this._graphics.getObjectId(targetObject)).then(
-            () => this._removeObjectStream(targetObjects)
-        );
+        return this.removeObject(
+            this._graphics.getObjectId(targetObject)
+        ).then(() => this._removeObjectStream(targetObjects));
     }
 
     /**
@@ -568,7 +565,7 @@ class ImageEditor {
         const imgUrl = URL.createObjectURL(imgFile);
         imageName = imageName || imgFile.name;
 
-        return this.loadImageFromURL(imgUrl, imageName).then(value => {
+        return this.loadImageFromURL(imgUrl, imageName).then((value) => {
             URL.revokeObjectURL(imgFile);
 
             return value;
@@ -586,12 +583,12 @@ class ImageEditor {
      *      console.log('new : ' + result.newWidth + ', ' + result.newHeight);
      * });
      */
-    loadImageFromURL(url, imageName) {
+    loadImageFromURL(url, imageName, cors) {
         if (!imageName || !url) {
             return Promise.reject(rejectMessages.invalidParameters);
         }
 
-        return this.execute(commands.LOAD_IMAGE, imageName, url);
+        return this.execute(commands.LOAD_IMAGE, imageName, url, cors);
     }
 
     /**
@@ -1086,7 +1083,7 @@ class ImageEditor {
          */
         this.fire(events.ADD_TEXT, {
             originPosition: event.originPosition,
-            clientPosition: event.clientPosition
+            clientPosition: event.clientPosition,
         });
     }
 
@@ -1417,6 +1414,15 @@ class ImageEditor {
     }
 
     /**
+     * Get the canvas
+     * @returns {Object} {{width: number, height: number}} canvas size
+     * @example
+     */
+    getCanvas() {
+        return this._graphics.getCanvas();
+    }
+
+    /**
      * Get object position by originX, originY
      * @param {number} id - object id
      * @param {string} originX - can be 'left', 'center', 'right'
@@ -1480,7 +1486,7 @@ class ImageEditor {
     }
 }
 
-action.mixin(ImageEditor);
+// action.mixin(ImageEditor);
 CustomEvents.mixin(ImageEditor);
 
 export default ImageEditor;

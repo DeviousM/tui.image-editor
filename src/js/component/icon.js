@@ -2,20 +2,18 @@
  * @author NHN Ent. FE Development Team <dl_javascript@nhnent.com>
  * @fileoverview Add icon module
  */
-import fabric from "../../libs/fabric.require";
-import snippet from "../tui-code-snippet";
-import Promise from "core-js/library/es6/promise";
-import Component from "../interface/component";
-import consts from "../consts";
+import fabric from '../../libs/fabric.require';
+import snippet from '../tui-code-snippet';
+import Promise from 'core-js/library/es6/promise';
+import Component from '../interface/component';
+import consts from '../consts';
 
 const events = consts.eventNames;
-const { rejectMessages } = consts;
+const {rejectMessages} = consts;
 
 const pathMap = {
-    arrow: "M 0 90 H 105 V 120 L 160 60 L 105 0 V 30 H 0 Z",
-    cancel:
-        "M 0 30 L 30 60 L 0 90 L 30 120 L 60 90 L 90 120 L 120 90 " +
-        "L 90 60 L 120 30 L 90 0 L 60 30 L 30 0 Z"
+    arrow: 'M 0 90 H 105 V 120 L 160 60 L 105 0 V 30 H 0 Z',
+    cancel: 'M 0 30 L 30 60 L 0 90 L 30 120 L 60 90 L 90 120 L 120 90 ' + 'L 90 60 L 120 30 L 90 0 L 60 30 L 30 0 Z'
 };
 
 /**
@@ -33,7 +31,7 @@ class Icon extends Component {
          * Default icon color
          * @type {string}
          */
-        this._oColor = "#000000";
+        this._oColor = '#000000';
 
         /**
          * Path value of each icon type
@@ -62,9 +60,6 @@ class Icon extends Component {
             const canvas = this.getCanvas();
             const path = this._pathMap[type];
             const selectionStyle = consts.fObjectOptions.SELECTION_STYLE;
-            const registerdIcon =
-                Object.keys(consts.defaultIconPath).indexOf(type) >= 0;
-            const useDragAddIcon = this.useDragAddIcon && registerdIcon;
             const icon = path ? this._createIcon(path) : null;
 
             if (!icon) {
@@ -74,7 +69,7 @@ class Icon extends Component {
             icon.set(
                 snippet.extend(
                     {
-                        type: "icon",
+                        type: 'icon',
                         fill: this._oColor
                     },
                     selectionStyle,
@@ -85,7 +80,7 @@ class Icon extends Component {
 
             canvas.add(icon).setActiveObject(icon);
 
-            if (useDragAddIcon) {
+            if (this.useDragAddIcon) {
                 this._addWithDragEvent(canvas);
             }
 
@@ -100,21 +95,21 @@ class Icon extends Component {
      */
     _addWithDragEvent(canvas) {
         canvas.on({
-            "mouse:move": fEvent => {
+            'mouse:move': fEvent => {
                 canvas.selection = false;
 
                 this.fire(events.ICON_CREATE_RESIZE, {
                     moveOriginPointer: canvas.getPointer(fEvent.e)
                 });
             },
-            "mouse:up": fEvent => {
+            'mouse:up': fEvent => {
                 this.fire(events.ICON_CREATE_END, {
                     moveOriginPointer: canvas.getPointer(fEvent.e)
                 });
 
-                canvas.defaultCursor = "default";
-                canvas.off("mouse:up");
-                canvas.off("mouse:move");
+                canvas.defaultCursor = 'default';
+                canvas.off('mouse:up');
+                canvas.off('mouse:move');
                 canvas.selection = true;
             }
         });
@@ -142,7 +137,7 @@ class Icon extends Component {
     setColor(color, obj) {
         this._oColor = color;
 
-        if (obj && obj.get("type") === "icon") {
+        if (obj && obj.get('type') === 'icon') {
             obj.setFill(this._oColor);
             this.getCanvas().renderAll();
         }
@@ -163,7 +158,7 @@ class Icon extends Component {
      * @returns {fabric.Path} Path object
      */
     _createIcon(path) {
-        return new fabric.Path(path, { lockUniScaling: true });
+        return new fabric.Path(path, {lockUniScaling: true});
     }
 }
 
